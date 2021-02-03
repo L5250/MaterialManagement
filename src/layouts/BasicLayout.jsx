@@ -97,11 +97,11 @@ const BasicLayout = (props) => {
       },
     [location.pathname],
   );
-  const { formatMessage } = useIntl();
+  // const { formatMessage } = useIntl();
   return (
     <ProLayout
       logo={logo}
-      formatMessage={formatMessage}
+      // formatMessage={formatMessage}
       {...props}
       {...settings}
       title="自愈材料管理"
@@ -121,9 +121,9 @@ const BasicLayout = (props) => {
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: formatMessage({
-            id: 'menu.home',
-          }),
+          // breadcrumbName: formatMessage({
+          //   id: 'menu.home',
+          // }),
         },
         ...routers,
       ]}
