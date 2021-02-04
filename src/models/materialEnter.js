@@ -25,7 +25,7 @@ export default {
         address: 'Sidney No. 1 Lake Park',
         tags: ['cool', 'teacher'],
       },
-    ]
+    ],
   },
   effects: {
     *getData({ params }, { call, put }) {
@@ -35,7 +35,6 @@ export default {
         params,
       });
     },
-
   },
   reducers: {
     setState: (state, { params }) => {

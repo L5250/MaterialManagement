@@ -97,7 +97,7 @@ const BasicLayout = (props) => {
       },
     [location.pathname],
   );
-  // const { formatMessage } = useIntl();
+  const { formatMessage } = useIntl();
   return (
     <ProLayout
       logo={logo}
@@ -121,9 +121,9 @@ const BasicLayout = (props) => {
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          // breadcrumbName: formatMessage({
-          //   id: 'menu.home',
-          // }),
+          breadcrumbName: formatMessage({
+            id: 'menu.home',
+          }),
         },
         ...routers,
       ]}

@@ -61,7 +61,7 @@ export default [
               {
                 name: '材料管理',
                 path: '/Materia',
-                icon: 'SettingOutlined',
+                icon: 'table',
                 routes: [
                   {
                     name: '材料录入',
@@ -77,7 +77,7 @@ export default [
                   {
                     component: './404',
                   },
-                ]
+                ],
               },
               {
                 name: '系统管理',
@@ -102,7 +102,7 @@ export default [
                   {
                     component: './404',
                   },
-                ]
+                ],
               },
               {
                 component: './404',
