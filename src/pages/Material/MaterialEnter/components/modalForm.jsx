@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, useEffect, useRef } from 'react';
 import { Button, Modal, Form, Input, Radio, Row, Col } from 'antd';
 import { connect } from 'umi';
 
@@ -6,8 +6,18 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
-const ModalForm = ({ visible, onCreate, onCancel }) => {
+const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    console.log(111111);
+    console.log(form);
+    props.dispatch({
+      type: 'materialEnter/setState',
+      params: { formRef: form },
+    });
+  }, []);
+
   return (
     <Modal
       visible={visible}
@@ -27,7 +37,12 @@ const ModalForm = ({ visible, onCreate, onCancel }) => {
           });
       }}
     >
-      <Form form={form} {...layout}>
+      <Form
+        name={'aa'}
+        form={form}
+        {...layout}
+        // initialValues={props.formData}
+      >
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
@@ -44,13 +59,13 @@ const ModalForm = ({ visible, onCreate, onCancel }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="英文名" label="英文名">
+            <Form.Item name="address" label="英文名">
               <Input placeholder="placeholder" />
             </Form.Item>
           </Col>
 
           <Col span={12}>
-            <Form.Item name="常用名" label="CAS号">
+            <Form.Item name="key" label="CAS号">
               <Input placeholder="placeholder" />
             </Form.Item>
           </Col>

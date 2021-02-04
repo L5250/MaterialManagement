@@ -34,19 +34,27 @@ const layout = {
 const MaterialEnter = (props) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
-  const [formData, setformData] = useState({});
+  const [rowData, setRowData] = useState({});
 
   const onCreate = (values) => {
     console.log('Received values of form: ', values);
     setVisible(false);
   };
   const add = () => {
-    form.setFieldsValue({});
+    props.formRef.resetFields();
+
     setVisible(true);
   };
 
   const edit = (record) => {
-    form.setFieldsValue({ name: 2222 });
+    setRowData(record);
+    props.formRef.setFieldsValue({ ...record });
+    props.dispatch({
+      type: 'materialEnter/setState',
+      params: {
+        rowData: record,
+      },
+    });
     setVisible(true);
   };
   const deleteItem = () => {
@@ -94,7 +102,6 @@ const MaterialEnter = (props) => {
     },
   ];
 
-  console.log(props, 'props');
   return (
     <PageContainer
       header={{
@@ -109,13 +116,6 @@ const MaterialEnter = (props) => {
       <ProCard direction="column" ghost>
         <Table columns={columns} dataSource={props.data} />
       </ProCard>
-      {/* <ModalFormSet
-        visible={visible}
-        onCreate={onCreate}
-        setModalVisit={(params) => {
-          setVisible(params);
-        }}
-      /> */}
 
       <Modal
         visible={false}
@@ -220,6 +220,7 @@ const MaterialEnter = (props) => {
         onCancel={() => {
           setVisible(false);
         }}
+        paramsData={rowData}
       />
     </PageContainer>
   );

@@ -1,7 +1,7 @@
 import { getData } from '@/services/materialEnter';
 
 export default {
-  namespace: 'materialEnter1',
+  namespace: 'materialEnter',
   state: {
     data: [
       {
