@@ -35,14 +35,7 @@ export default defineConfig({
   },
   title: false,
   ignoreMomentLocale: true,
-  // proxy: proxy[REACT_APP_ENV || 'dev'],
-  proxy: {
-    '/api': {
-      target: 'https://pagead2.googlesyndication.com/',
-      changeOrigin: true,
-      pathRewrite: { '^/api': '' },
-    },
-  },
+  proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
   },
