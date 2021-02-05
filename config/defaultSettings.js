@@ -10,5 +10,6 @@ const proSettings = {
   title: 'Ant Design Pro',
   pwa: false,
   iconfontUrl: '',
+  fixedHeader: true,
 };
 export default proSettings;

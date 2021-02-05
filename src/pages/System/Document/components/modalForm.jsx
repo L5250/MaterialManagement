@@ -18,7 +18,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   useEffect(() => {
     props.dispatch({
-      type: 'materialEnter/setState',
+      type: 'document/setState',
       params: { formRef: form },
     });
   }, []);
@@ -62,9 +62,9 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       }}
     >
       <Form
+        name={'aa'}
         form={form}
         {...layout}
-        name='materialEnter'
       // initialValues={props.formData}
       >
         <Row gutter={24}>
@@ -172,4 +172,4 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     </Modal>
   );
 };
-export default connect(({ materialEnter, loading }) => ({ ...materialEnter, loading }))(ModalForm);
+export default connect(({ document, loading }) => ({ ...document, loading }))(ModalForm);

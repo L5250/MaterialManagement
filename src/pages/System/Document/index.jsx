@@ -20,13 +20,21 @@ import {
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
 import { } from '@ant-design/icons';
+
 import ModalForm from './components/modalForm';
 
+const { Header, Content } = Layout;
 const { Search } = Input;
 
-const MaterialEnter = (props) => {
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const DocumentManagement = (props) => {
+  const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
-  console.log(process.env.NODE_ENV, 'eeee');
+
   const onCreate = (values) => {
     console.log('Received values of form: ', values);
     setVisible(false);
@@ -34,7 +42,7 @@ const MaterialEnter = (props) => {
   const add = () => {
     props.formRef.resetFields();
     props.dispatch({
-      type: 'materialEnter/setState',
+      type: 'document/setState',
       params: {
         rowData: {},
         title: "新增自愈材料"
@@ -46,7 +54,7 @@ const MaterialEnter = (props) => {
   const edit = (record) => {
     props.formRef.setFieldsValue({ ...record });
     props.dispatch({
-      type: 'materialEnter/setState',
+      type: 'document/setState',
       params: {
         rowData: record,
         title: "编辑自愈材料"
@@ -71,40 +79,30 @@ const MaterialEnter = (props) => {
   // 表格列
   const columns = [
     {
-      title: 'CAS号',
-      align: 'center',
+      title: '序号',
       dataIndex: 'a',
+      align: "center",
+      width:100,
+      render: (text, record, index) => {
+        return index + 1
+      }
     },
     {
-      title: '常用名',
-      align: 'center',
+      title: '文献年份',
       dataIndex: 'b',
+      width:300,
+      align: 'center',
     },
     {
-      title: '英文名',
-      align: 'center',
+      title: '文献名称',
       dataIndex: 'v',
-    },
-    {
-      title: '分子式',
       align: 'center',
-      dataIndex: 'c',
-    },
-    {
-      title: '分子量',
-      align: 'center',
-      dataIndex: 'd',
-    },
-    {
-      title: '密度',
-      align: 'center',
-      dataIndex: 'e',
     },
     {
       title: '操作',
-      align: 'center',
       dataIndex: '',
-      width: 200,
+      align: 'center',
+      width:200,
       render: (record) => (
         <Space size="middle">
           {/* <Button title="编辑" icon={<EditOutlined />} type="primary" />
@@ -120,7 +118,7 @@ const MaterialEnter = (props) => {
     <PageContainer
       header={{
         extra: [
-          <Search key="1" placeholder={"输入材料名称或DAS号查询"} allowClear enterButton style={{ width: 300 }} onSearch={onSearch} />,
+          <Search key="1" placeholder={"输入文献名称查询"} allowClear enterButton style={{ width: 300 }} onSearch={onSearch} />,
           <Button onClick={add} key="2" type="primary">
             新增
           </Button>,
@@ -145,6 +143,6 @@ const MaterialEnter = (props) => {
 
   );
 };
-export default connect(({ materialEnter, loading }) => ({ ...materialEnter, loading }))(
-  MaterialEnter,
+export default connect(({ document, loading }) => ({ ...document, loading }))(
+  DocumentManagement,
 );

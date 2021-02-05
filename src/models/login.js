@@ -40,12 +40,13 @@ const Model = {
         }
 
         history.replace(redirect || '/');
+      }else{
+        message.error("账号密码错误")
       }
     },
 
     logout() {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
-
       if (window.location.pathname !== '/user/login' && !redirect) {
         history.replace({
           pathname: '/user/login',

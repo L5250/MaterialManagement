@@ -12,6 +12,9 @@ export default [
             path: '/user/login',
             component: './User/login',
           },
+          {
+            component: './404',
+          }
         ],
       },
       {
