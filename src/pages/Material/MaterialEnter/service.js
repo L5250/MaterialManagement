@@ -9,5 +9,9 @@ import request from '@/utils/request';
 async function getData(mobile) {
   return request(`/api/login/captcha?mobile=${mobile}`);
 }
+async function text(param = { sv: 200, tid: 'gda', tv: 'r20210202', st: 'env' }) {
+  console.log(222);
+  return request('/api/getconfig/sodar', { params: param });
+}
 
-export default { getData }
+export default { getData, text };

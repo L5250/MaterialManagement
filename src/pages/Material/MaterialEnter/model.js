@@ -6,7 +6,7 @@ export default {
     data: [{ name: 1 }],
     formRef: {},
     rowData: {},
-    title: ""
+    title: '',
   },
   effects: {
     *getData({ params }, { call, put }) {
@@ -15,6 +15,17 @@ export default {
         type: 'setData',
         params,
       });
+    },
+    //
+    *text({ params }, { call, put }) {
+      console.log(1111);
+      const response = yield call(service.text, params);
+      console.log(response);
+      yield put({
+        type: 'setData',
+        params,
+      });
+      return response;
     },
   },
   reducers: {

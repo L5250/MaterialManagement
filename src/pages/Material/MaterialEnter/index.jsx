@@ -19,7 +19,7 @@ import {
 } from 'antd';
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import { } from '@ant-design/icons';
+import {} from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 
 const { Search } = Input;
@@ -37,7 +37,7 @@ const MaterialEnter = (props) => {
       type: 'materialEnter/setState',
       params: {
         rowData: {},
-        title: "新增自愈材料"
+        title: '新增自愈材料',
       },
     });
     setVisible(true);
@@ -49,7 +49,7 @@ const MaterialEnter = (props) => {
       type: 'materialEnter/setState',
       params: {
         rowData: record,
-        title: "编辑自愈材料"
+        title: '编辑自愈材料',
       },
     });
     setVisible(true);
@@ -57,16 +57,23 @@ const MaterialEnter = (props) => {
   const deleteItem = () => {
     Modal.confirm({
       title: '提示',
-      content: "确认删除自愈材料？",
+      content: '确认删除自愈材料？',
       onOk: () => {
-        console.log("ok");
-      }
+        console.log('ok');
+      },
     });
   };
 
   const onSearch = (value) => {
     console.log(value);
-  }
+    props
+      .dispatch({
+        type: 'materialEnter/text',
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  };
 
   // 表格列
   const columns = [
@@ -120,19 +127,25 @@ const MaterialEnter = (props) => {
     <PageContainer
       header={{
         extra: [
-          <Search key="1" placeholder={"输入材料名称或DAS号查询"} allowClear enterButton style={{ width: 300 }} onSearch={onSearch} />,
+          <Search
+            key="1"
+            placeholder={'输入材料名称或DAS号查询'}
+            allowClear
+            enterButton
+            style={{ width: 300 }}
+            onSearch={onSearch}
+          />,
           <Button onClick={add} key="2" type="primary">
             新增
           </Button>,
         ],
       }}
     >
-
       <Table
         columns={columns}
         dataSource={props.data}
         rowKey="name"
-        scroll={{ y: "calc(100vh - 320px)" }}
+        scroll={{ y: 'calc(100vh - 320px)' }}
       />
       <ModalForm
         visible={visible}
@@ -142,7 +155,6 @@ const MaterialEnter = (props) => {
         }}
       />
     </PageContainer>
-
   );
 };
 export default connect(({ materialEnter, loading }) => ({ ...materialEnter, loading }))(
