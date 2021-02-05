@@ -34,14 +34,13 @@ ol {
     width: 100%;
     overflow-x: auto;
 
-    &-thead>tr,
-    &-tbody>tr {
-
-      >th,
-      >td {
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
         white-space: pre;
 
-        >span {
+        > span {
           display: block;
         }
       }
@@ -50,26 +49,24 @@ ol {
 }
 
 // 兼容IE11
-@media screen and(-ms-high-contrast: active),
-(-ms-high-contrast: none) {
-  body .ant-design-pro>.ant-layout {
+@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
+  body .ant-design-pro > .ant-layout {
     min-height: 100vh;
   }
 }
 
-
-/******************滚动条***开始*****************/
+// /******************滚动条***开始*****************/
 
 * ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
-  border-radius: 4px;
   background-color: #f1f1f1;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 * ::-webkit-scrollbar-thumb {
-  background-color: #cccccc;
+  background-color: #ccc;
   border-radius: 4px;
 }
 
@@ -77,4 +74,4 @@ ol {
   background-color: #a8a8a8;
 }
 
-/******************滚动条***结束*****************/
+// /******************滚动条***结束*****************/
