@@ -14,7 +14,7 @@ export default [
           },
           {
             component: './404',
-          }
+          },
         ],
       },
       {
@@ -71,6 +71,11 @@ export default [
                     path: '/Materia/MaterialEnter',
                     component: './Material/MaterialEnter',
                     authority: ['admin'],
+                  },
+                  {
+                    name: '材料管理',
+                    path: '/Materia/MaterialManager',
+                    component: './Material/MaterialManager',
                   },
                   {
                     name: '材料检索',

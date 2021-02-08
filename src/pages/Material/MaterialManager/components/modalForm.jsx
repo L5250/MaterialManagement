@@ -1,6 +1,6 @@
 import React, { useState, useImperativeHandle, useEffect, useRef } from 'react';
 import { connect } from 'umi';
-import { Button, Modal, Form, Input, Radio, Row, Col, Upload, message, Select } from 'antd';
+import { Button, Modal, Form, Input, Radio, Row, Col, Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 const layout = {
@@ -11,7 +11,6 @@ const layout = {
 const layoutSingle = {
   labelCol: { span: 4 },
 };
-const { Option } = Select;
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
@@ -19,7 +18,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   useEffect(() => {
     props.dispatch({
-      type: 'materialEnter/setState',
+      type: 'materialManager/setState',
       params: { formRef: form },
     });
   }, []);
@@ -41,11 +40,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-
-  const addType = () => {
-    console.log(122);
-  };
-
   return (
     <Modal
       forceRender
@@ -70,7 +64,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       <Form
         form={form}
         {...layout}
-        name="materialEnter"
+        name="materialManager"
         // initialValues={props.formData}
       >
         <Row gutter={24}>
@@ -135,27 +129,17 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             </Form.Item>
           </Col>
 
-          <Col span={12}>
-            <Form.Item name="asd" label="MSDN">
+          <Col span={24}>
+            <Form.Item {...layoutSingle} name="asd" label="MSDN">
               <Radio.Group>
                 <Radio value={1}>中文版</Radio>
                 <Radio value={2}>美版</Radio>
               </Radio.Group>
             </Form.Item>
           </Col>
-          <Col span={12}>
-            <Form.Item name="as2d" label="应用场景">
-              <Select defaultValue="lucy">
-                <Option value="jack">基底材料</Option>
-                <Option value="lucy">电解质材料</Option>
-                <Option value="Yiminghe">粘接剂</Option>
-                <Option value="Yiminghe">外壳材料</Option>
-              </Select>
-            </Form.Item>
-          </Col>
 
-          <Col span={12}>
-            <Form.Item name="image" label="上传文件">
+          <Col span={24}>
+            <Form.Item {...layoutSingle} name="image" label="上传文件">
               <Upload
                 name="avatar"
                 listType="picture-card"
@@ -174,28 +158,11 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="as2d" label="材料自愈类型">
-              {/* <Button onClick={addType} icon={<PlusOutlined />} >添加</Button> */}
-              <Select mode="multiple" placeholder="">
-                <Option value="jack">高分子聚合物</Option>
-                <Option value="lucy">氢键</Option>
-                <Option value="1">静电作用</Option>
-                <Option value="2">硼酸脂键</Option>
-                <Option value="3">液态金属</Option>
-                <Option value="5">镓系</Option>
-                <Option value="4">镓铟合金</Option>
-                <Option value="6">铟系</Option>
-                <Option value="7">钠钾合金</Option>
-                <Option value="8">其它</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col span={12}>
             <Form.Item name="常用名" label="相关文献">
               <Button type="primary">查看/添加</Button>
             </Form.Item>
           </Col>
+
           <Col span={12}>
             <Form.Item name="应用实例" label="应用实例">
               <Button type="primary">查看/添加</Button>
@@ -206,4 +173,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     </Modal>
   );
 };
-export default connect(({ materialEnter, loading }) => ({ ...materialEnter, loading }))(ModalForm);
+export default connect(({ materialManager, loading }) => ({ ...materialManager, loading }))(
+  ModalForm,
+);

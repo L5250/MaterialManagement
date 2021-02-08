@@ -20,21 +20,13 @@ import {
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
 import {} from '@ant-design/icons';
-
 import ModalForm from './components/modalForm';
 
-const { Header, Content } = Layout;
 const { Search } = Input;
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
-const DocumentManagement = (props) => {
-  const [form] = Form.useForm();
+const MaterialManager = (props) => {
   const [visible, setVisible] = useState(false);
-
+  console.log(process.env.NODE_ENV, 'eeee');
   const onCreate = (values) => {
     console.log('Received values of form: ', values);
     setVisible(false);
@@ -42,10 +34,10 @@ const DocumentManagement = (props) => {
   const add = () => {
     props.formRef.resetFields();
     props.dispatch({
-      type: 'document/setState',
+      type: 'materialManager/setState',
       params: {
         rowData: {},
-        title: '新增文献',
+        title: '新增自愈材料',
       },
     });
     setVisible(true);
@@ -54,10 +46,10 @@ const DocumentManagement = (props) => {
   const edit = (record) => {
     props.formRef.setFieldsValue({ ...record });
     props.dispatch({
-      type: 'document/setState',
+      type: 'materialManager/setState',
       params: {
         rowData: record,
-        title: '编辑文献',
+        title: '编辑自愈材料',
       },
     });
     setVisible(true);
@@ -74,40 +66,51 @@ const DocumentManagement = (props) => {
 
   const onSearch = (value) => {
     console.log(value);
+    props
+      .dispatch({
+        type: 'materialManager/text',
+      })
+      .then((res) => {
+        console.log(res);
+      });
   };
 
   // 表格列
   const columns = [
     {
-      title: '序号',
+      title: 'CAS号',
+      align: 'center',
       dataIndex: 'a',
-      align: 'center',
-      width: 100,
-      render: (text, record, index) => {
-        return index + 1;
-      },
     },
     {
-      title: 'DOI号',
+      title: '常用名',
+      align: 'center',
       dataIndex: 'b',
-      width: 300,
-      align: 'center',
     },
     {
-      title: '文献年份',
-      dataIndex: 'b',
-      width: 300,
+      title: '英文名',
       align: 'center',
-    },
-    {
-      title: '文献名称',
       dataIndex: 'v',
+    },
+    {
+      title: '分子式',
       align: 'center',
+      dataIndex: 'c',
+    },
+    {
+      title: '分子量',
+      align: 'center',
+      dataIndex: 'd',
+    },
+    {
+      title: '密度',
+      align: 'center',
+      dataIndex: 'e',
     },
     {
       title: '操作',
-      dataIndex: '',
       align: 'center',
+      dataIndex: '',
       width: 200,
       render: (record) => (
         <Space size="middle">
@@ -126,7 +129,7 @@ const DocumentManagement = (props) => {
         extra: [
           <Search
             key="1"
-            placeholder={'输入文献名称查询'}
+            placeholder={'输入材料名称或DAS号查询'}
             allowClear
             enterButton
             style={{ width: 300 }}
@@ -154,4 +157,6 @@ const DocumentManagement = (props) => {
     </PageContainer>
   );
 };
-export default connect(({ document, loading }) => ({ ...document, loading }))(DocumentManagement);
+export default connect(({ materialManager, loading }) => ({ ...materialManager, loading }))(
+  MaterialManager,
+);

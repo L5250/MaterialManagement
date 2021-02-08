@@ -1,6 +1,18 @@
 import React, { useState, useImperativeHandle, useEffect, useRef } from 'react';
 import { connect } from 'umi';
-import { Button, Modal, Form, Input, Radio, Row, Col, Upload, message } from 'antd';
+import {
+  Button,
+  Modal,
+  Form,
+  Input,
+  Radio,
+  Row,
+  Col,
+  Upload,
+  message,
+  Select,
+  Checkbox,
+} from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 const layout = {
@@ -9,11 +21,10 @@ const layout = {
 };
 
 const layoutSingle = {
-  labelCol: { span: 4 },
+  labelCol: { span: 16 },
 };
-
-const { TextArea } = Input;
-
+const { Option } = Select;
+const { Search } = Input;
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
@@ -21,7 +32,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   useEffect(() => {
     props.dispatch({
-      type: 'document/setState',
+      type: 'dictionaries/setState',
       params: { formRef: form },
     });
   }, []);
@@ -43,6 +54,14 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
+
+  const addType = () => {
+    console.log(122);
+  };
+  const reset = () => {
+    form.setFieldsValue({ psw: '' });
+  };
+
   return (
     <Modal
       forceRender
@@ -65,14 +84,14 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       }}
     >
       <Form
-        name={'aa'}
         form={form}
         {...layout}
+        name="dictionaries"
         // initialValues={props.formData}
       >
         <Form.Item
           name="name"
-          label="DOI号"
+          label="用户名"
           rules={[
             {
               required: true,
@@ -82,9 +101,10 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         >
           <Input placeholder="placeholder" />
         </Form.Item>
+
         <Form.Item
-          name="name"
-          label="文献年份"
+          name="psw"
+          label="密码"
           rules={[
             {
               required: true,
@@ -92,22 +112,32 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
+          <Search placeholder="placeholder" enterButton="重置" onSearch={reset} />
+        </Form.Item>
+
+        <Form.Item name="address" label="用户姓名">
           <Input placeholder="placeholder" />
         </Form.Item>
-        <Form.Item
-          name="name"
-          label="文献名称"
-          rules={[
-            {
-              required: true,
-              message: 'Input something!',
-            },
-          ]}
-        >
-          <TextArea placeholder="placeholder" rows={4} />
+
+        <Form.Item name="address" label="联系电话">
+          <Input placeholder="placeholder" />
         </Form.Item>
+
+        <Row>
+          <Col span={12}>
+            <Form.Item {...layoutSingle} name="isadmin" label="是否管理员">
+              <Checkbox />
+            </Form.Item>
+          </Col>
+
+          <Col span={12}>
+            <Form.Item {...layoutSingle} name="address" label="是否启用">
+              <Checkbox />
+            </Form.Item>
+          </Col>
+        </Row>
       </Form>
     </Modal>
   );
 };
-export default connect(({ document, loading }) => ({ ...document, loading }))(ModalForm);
+export default connect(({ dictionaries, loading }) => ({ ...dictionaries, loading }))(ModalForm);
