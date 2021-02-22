@@ -19,7 +19,7 @@ import {
 } from 'antd';
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import {} from '@ant-design/icons';
+import { } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 
 const { Search } = Input;
@@ -80,32 +80,32 @@ const MaterialEnter = (props) => {
     {
       title: 'CAS号',
       align: 'center',
-      dataIndex: 'a',
+      dataIndex: 'MaterialRecordCode',
     },
     {
       title: '常用名',
       align: 'center',
-      dataIndex: 'b',
+      dataIndex: 'MaterialName',
     },
     {
       title: '英文名',
       align: 'center',
-      dataIndex: 'v',
+      dataIndex: 'MaterialEName',
     },
     {
       title: '分子式',
       align: 'center',
-      dataIndex: 'c',
+      dataIndex: 'ChemicalFormula',
     },
     {
       title: '分子量',
       align: 'center',
-      dataIndex: 'd',
+      dataIndex: 'MolecularWeight',
     },
     {
       title: '密度',
       align: 'center',
-      dataIndex: 'e',
+      dataIndex: 'Density',
     },
     {
       title: '操作',
@@ -122,6 +122,7 @@ const MaterialEnter = (props) => {
       ),
     },
   ];
+
 
   return (
     <PageContainer

@@ -6,8 +6,16 @@ import request from '@/utils/request';
 //     data: params,
 //   });
 // }
-async function getData(mobile) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+async function getData(params) {
+  return request(`/api/ActionApi/LiterManage/GetLiterList`, { params });
 }
 
-export default { getData }
+async function saveLiter(params) {
+  return request(`/api/ActionApi/LiterManage/SaveLiterInfo`, { method: 'POST', data: params });
+}
+
+async function deleteLiter(params) {
+  return request(`/api/ActionApi/LiterManage/DeleteLiter`, { params });
+}
+
+export default { getData, saveLiter, deleteLiter }

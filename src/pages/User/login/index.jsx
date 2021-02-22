@@ -35,7 +35,7 @@ const Login = (props) => {
     const { dispatch } = props;
     dispatch({
       type: 'login/login',
-      payload: { ...values, type },
+      payload: { ...values},
     });
   };
 

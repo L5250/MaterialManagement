@@ -16,17 +16,47 @@ import {
   message,
   Input,
   Form,
+  Checkbox
 } from 'antd';
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import {} from '@ant-design/icons';
+import { } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 
 const { Search } = Input;
 
 const MaterialManager = (props) => {
   const [visible, setVisible] = useState(false);
-  console.log(process.env.NODE_ENV, 'eeee');
+
+  const { dispatch } = props
+
+  // 获取自愈材料列表
+  const getData = (params = { isInvalid: 1, keyWords: '' }) => {
+    console.log(11121,params);
+    dispatch({
+      type: "materialManager/getData",
+      params: { isInvalid: params.isInvalid || props.isInvalid, keyWords: params.keyWords || props.keyWords }
+    }).then(res => {
+      console.log(res);
+      if (res.state) {
+        console.log(res);
+      } else {
+        dispatch({
+          type: "materialManager/setState",
+          params: {
+            data: [
+              {
+                key: 1,
+                MaterialName: 111
+              }
+            ]
+          }
+        })
+      }
+    })
+  };
+
+  // console.log(process.env.NODE_ENV, 'eeee');
   const onCreate = (values) => {
     console.log('Received values of form: ', values);
     setVisible(false);
@@ -43,8 +73,10 @@ const MaterialManager = (props) => {
     setVisible(true);
   };
 
+  // 编辑
   const edit = (record) => {
-    props.formRef.setFieldsValue({ ...record });
+    console.log(record);
+    props.formRef.setFieldsValue({ ...record});
     props.dispatch({
       type: 'materialManager/setState',
       params: {
@@ -54,6 +86,8 @@ const MaterialManager = (props) => {
     });
     setVisible(true);
   };
+
+  // 删除
   const deleteItem = () => {
     Modal.confirm({
       title: '提示',
@@ -64,48 +98,62 @@ const MaterialManager = (props) => {
     });
   };
 
+  // 查询
   const onSearch = (value) => {
     console.log(value);
-    props
-      .dispatch({
-        type: 'materialManager/text',
-      })
-      .then((res) => {
-        console.log(res);
-      });
+    dispatch({
+      type: 'materialManager/setState',
+      params: { keyWords: value }
+    })
+    getData({ keyWords: value })
   };
+
+  // 显示禁用的材料
+  const invalidChange = (e) => {
+    console.log(e.target.checked);
+    dispatch({
+      type: 'materialManager/setState',
+      params: { isInvalid: e.target.checked }
+    })
+    getData({ isInvalid: e.target.checked })
+  }
+
+
+  useEffect(() => {
+    // getData()
+  }, [])
 
   // 表格列
   const columns = [
     {
       title: 'CAS号',
       align: 'center',
-      dataIndex: 'a',
+      dataIndex: 'MaterialRecordCode',
     },
     {
       title: '常用名',
       align: 'center',
-      dataIndex: 'b',
+      dataIndex: 'MaterialName',
     },
     {
       title: '英文名',
       align: 'center',
-      dataIndex: 'v',
+      dataIndex: 'MaterialEName',
     },
     {
       title: '分子式',
       align: 'center',
-      dataIndex: 'c',
+      dataIndex: 'ChemicalFormula',
     },
     {
       title: '分子量',
       align: 'center',
-      dataIndex: 'd',
+      dataIndex: 'MolecularWeight',
     },
     {
       title: '密度',
       align: 'center',
-      dataIndex: 'e',
+      dataIndex: 'Density',
     },
     {
       title: '操作',
@@ -127,15 +175,16 @@ const MaterialManager = (props) => {
     <PageContainer
       header={{
         extra: [
+          <Checkbox key="1" onChange={invalidChange}>显示禁用的材料</Checkbox>,
           <Search
-            key="1"
+            key="2"
             placeholder={'输入材料名称或DAS号查询'}
             allowClear
             enterButton
             style={{ width: 300 }}
             onSearch={onSearch}
           />,
-          <Button onClick={add} key="2" type="primary">
+          <Button onClick={add} key="3" type="primary">
             新增
           </Button>,
         ],
@@ -144,8 +193,9 @@ const MaterialManager = (props) => {
       <Table
         columns={columns}
         dataSource={props.data}
-        rowKey="name"
+        rowKey="key"
         scroll={{ y: 'calc(100vh - 320px)' }}
+        pagination={false}
       />
       <ModalForm
         visible={visible}

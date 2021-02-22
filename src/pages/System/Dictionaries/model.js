@@ -3,8 +3,9 @@ import service from './service';
 export default {
   namespace: 'dictionaries',
   state: {
-    data: [{ name: 1 }],
+    data: [{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },{ name: 1 },],
     formRef: {},
+    formDicItemRef:{},
     rowData: {},
     title: '',
   },

@@ -19,7 +19,7 @@ import {
 } from 'antd';
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import {} from '@ant-design/icons';
+import { } from '@ant-design/icons';
 
 import ModalForm from './components/modalForm';
 
@@ -35,6 +35,15 @@ const DocumentManagement = (props) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
 
+  const { dispatch } = props
+
+  // 获取文献
+  const getData = (params = { year: 0, keyWords: '' }) => {
+    dispatch({
+      type: "document/getData",
+      params: { year: params.year || props.year, keyWords: params.keyWords || props.keyWords }
+    })
+  };
   const onCreate = (values) => {
     console.log('Received values of form: ', values);
     setVisible(false);
@@ -72,9 +81,19 @@ const DocumentManagement = (props) => {
     });
   };
 
+  // 查询
   const onSearch = (value) => {
     console.log(value);
+    dispatch({
+      type: 'document/setState',
+      params: { keyWords: value }
+    })
+    getData({ keyWords: value })
   };
+
+  useEffect(() => {
+    getData()
+  })
 
   // 表格列
   const columns = [
@@ -89,19 +108,19 @@ const DocumentManagement = (props) => {
     },
     {
       title: 'DOI号',
-      dataIndex: 'b',
+      dataIndex: 'LiterCode',
       width: 300,
       align: 'center',
     },
     {
       title: '文献年份',
-      dataIndex: 'b',
+      dataIndex: 'LiterYear',
       width: 300,
       align: 'center',
     },
     {
       title: '文献名称',
-      dataIndex: 'v',
+      dataIndex: 'LiterName',
       align: 'center',
     },
     {
@@ -138,12 +157,20 @@ const DocumentManagement = (props) => {
         ],
       }}
     >
-      <Table
-        columns={columns}
-        dataSource={props.data}
-        rowKey="name"
-        scroll={{ y: 'calc(100vh - 320px)' }}
-      />
+      <Layout>
+        <Content>
+
+          <Table
+            style={{ height: "100%" }}
+            columns={columns}
+            dataSource={props.data}
+            rowKey="LiterId"
+            pagination={false}
+            // scroll={{ y: 'calc(100vh - 300px)' }}
+            scroll={{ y: '100%' }}
+          />
+        </Content>
+      </Layout>
       <ModalForm
         visible={visible}
         onCreate={onCreate}

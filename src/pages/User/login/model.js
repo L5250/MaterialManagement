@@ -1,18 +1,18 @@
 import { stringify } from 'querystring';
 import { history } from 'umi';
 import { message } from 'antd';
-import { fakeAccountLogin } from '@/services/login';
+import service from './service';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
 const Model = {
-  namespace: 'login1',
+  namespace: 'login',
   state: {
     status: undefined,
   },
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
+      const response = yield call(service.login, payload);
       yield put({
         type: 'changeLoginStatus',
         payload: response,

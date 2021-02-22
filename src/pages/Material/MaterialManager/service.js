@@ -6,12 +6,12 @@ import request from '@/utils/request';
 //     data: params,
 //   });
 // }
-async function getData(mobile) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+async function getData(params) {
+  return request(`/api/ActionApi/MaterialManage/GetMaterialRecords`, { params });
 }
-async function text(param = {}) {
+async function text(params = {}) {
   console.log(222);
-  return request('/api/users', { params: param });
+  return request('/api/users', { params });
 }
 
 export default { getData, text };

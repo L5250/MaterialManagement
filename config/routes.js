@@ -70,7 +70,7 @@ export default [
                     name: '材料录入',
                     path: '/Materia/MaterialEnter',
                     component: './Material/MaterialEnter',
-                    authority: ['admin'],
+                    // authority: ['admin'],
                   },
                   {
                     name: '材料管理',

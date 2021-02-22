@@ -20,10 +20,12 @@ import {
 } from 'antd';
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import {} from '@ant-design/icons';
+import { } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
+import ModalFormDicItem from './components/modalFormItem';
 
 const { Search } = Input;
+const { Header, Content } = Layout;
 
 const Dictionaries = (props) => {
   const [visible, setVisible] = useState(false);
@@ -84,74 +86,158 @@ const Dictionaries = (props) => {
     {
       title: '序号',
       align: 'center',
-      dataIndex: '',
+      dataIndex: 'ListOrder',
       width: 120,
-      render: (text, record, index) => {
-        return index + 1;
-      },
     },
     {
-      title: '用户名',
+      title: '分类名称',
       align: 'center',
-      dataIndex: 'a',
+      dataIndex: 'DictSortName',
     },
     {
-      title: '姓名',
+      title: '分类项编码',
       align: 'center',
-      dataIndex: 'b',
+      dataIndex: 'DictSortCode',
     },
     {
-      title: '联系电话',
+      title: '备注',
       align: 'center',
-      dataIndex: 'v',
-    },
-    {
-      title: '是否管理员',
-      align: 'center',
-      dataIndex: 'c',
+      dataIndex: 'Remark',
     },
     {
       title: '操作',
       align: 'center',
       dataIndex: '',
+      fixed: "right",
       width: 200,
       render: (record) => (
         <Space size="middle">
-          {/* <Button title="编辑" icon={<EditOutlined />} type="primary" />
-          <Button title="删除" icon={<DeleteOutlined />} type="danger" /> */}
           <a onClick={() => edit(record)}>编辑</a>
-          <a onClick={() => resetPassword(record)}>重置密码</a>
           <a onClick={() => deleteItem(record)}>删除</a>
         </Space>
       ),
     },
   ];
 
+  const dicItemColumns = [
+    {
+      title: '序号',
+      align: 'center',
+      dataIndex: 'ListOrder',
+      width: 120,
+    },
+    {
+      title: '字典名称',
+      align: 'center',
+      dataIndex: 'DictItemName',
+    },
+    {
+      title: '字典编码',
+      align: 'center',
+      dataIndex: 'DictItemCode',
+    },
+    {
+      title: '备注',
+      align: 'center',
+      dataIndex: 'Remark',
+    },
+    {
+      title: '操作',
+      align: 'center',
+      dataIndex: '',
+      fixed: "right",
+      width: 200,
+      render: (record) => (
+        <Space size="middle">
+          <a onClick={() => edit(record)}>编辑</a>
+          <a onClick={() => deleteItem(record)}>删除</a>
+        </Space>
+      ),
+    },
+
+  ]
+
   return (
     <PageContainer
-      header={{
-        extra: [
-          <Checkbox key="3">显示禁用的用户</Checkbox>,
-          <Search
-            key="1"
-            placeholder={'输入用户名或用户姓名查询'}
-            allowClear
-            enterButton
-            style={{ width: 300 }}
-            onSearch={onSearch}
-          />,
-          <Button onClick={add} key="2" type="primary">
-            新增
-          </Button>,
-        ],
-      }}
+    // header={{
+    //   extra: [
+    //     <Checkbox key="3">显示禁用的用户</Checkbox>,
+    //     <Search
+    //       key="1"
+    //       placeholder={'输入用户名或用户姓名查询'}
+    //       allowClear
+    //       enterButton
+    //       style={{ width: 300 }}
+    //       onSearch={onSearch}
+    //     />,
+    //     <Button onClick={add} key="2" type="primary">
+    //       新增
+    //     </Button>,
+    //   ],
+    // }}
     >
-      <Table
+      {/* <Table
         columns={columns}
         dataSource={props.data}
         rowKey="name"
         scroll={{ y: 'calc(100vh - 320px)' }}
-      />
+      /> */}
+      <Layout>
+        <Row gutter={24}>
+          <Col span={12}>
+            <Layout>
+              <Header style={{ marginBottom: 10 }}>
+                <Space>
+                  <Search
+                    placeholder={'输入用户名或用户姓名查询'}
+                    allowClear
+                    enterButton
+                    style={{ width: 300 }}
+                    onSearch={onSearch}
+                  />
+                  <Button style={{ textAlign: "right" }} onClick={add} key="2" type="primary">新增</Button>
+                </Space>
+              </Header>
+              <Content>
+                <Table
+                  columns={columns}
+                  dataSource={props.data}
+                  rowKey="DictSortId"
+                  pagination={false}
+                  scroll={{ x: 800, y: 'calc(100vh - 300px)' }}
+
+                />
+              </Content>
+            </Layout>
+          </Col>
+          <Col span={12}>
+            <Layout>
+              <Header style={{ marginBottom: 10 }}>
+                <Space>
+                  <Search
+                    placeholder={'输入用户名或用户姓名查询'}
+                    allowClear
+                    enterButton
+                    style={{ width: 300 }}
+                    onSearch={onSearch}
+                  />
+                  <Button style={{ textAlign: "right" }} onClick={add} key="2" type="primary">新增</Button>
+                </Space>
+              </Header>
+              <Content>
+                <Table
+                  columns={dicItemColumns}
+                  dataSource={props.data}
+                  rowKey="DictItemId"
+                  pagination={false}
+                  scroll={{ x: 800, y: 'calc(100vh - 300px)' }}
+
+                />
+              </Content>
+            </Layout>
+          </Col>
+        </Row>
+      </Layout>
       <ModalForm
         visible={visible}
         onCreate={onCreate}
@@ -159,7 +245,15 @@ const Dictionaries = (props) => {
           setVisible(false);
         }}
       />
+       <ModalFormDicItem
+        visible={visible}
+        onCreate={onCreate}
+        onCancel={() => {
+          setVisible(false);
+        }}
+      />
     </PageContainer>
+
   );
 };
 export default connect(({ dictionaries, loading }) => ({ ...dictionaries, loading }))(Dictionaries);
