@@ -1,69 +1,35 @@
-import React, { useState, useImperativeHandle, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'umi';
 import {
-  Button,
   Modal,
   Form,
   Input,
-  Radio,
-  Row,
-  Col,
-  Upload,
-  message,
   Select,
-  Checkbox,
 } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
 
-const layoutSingle = {
-  labelCol: { span: 16 },
-};
 const { Option } = Select;
-const { Search } = Input;
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
-  const imageUrl = form.getFieldValue('image');
+  const { dicSortsData } = props
 
+  const { loading } = props
   useEffect(() => {
     props.dispatch({
       type: 'dictionaries/setState',
       params: { formDicItemRef: form },
     });
   }, []);
-  function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
-  }
 
-  const uploadButton = (
-    <div>
-      {props.loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
-  const addType = () => {
-    console.log(122);
-  };
-  const reset = () => {
-    form.setFieldsValue({ psw: '' });
-  };
 
   return (
     <Modal
+      confirmLoading={loading && loading.global}
       forceRender
       width={460}
       visible={visible}
@@ -75,7 +41,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         form
           .validateFields()
           .then((values) => {
-            form.resetFields();
+            // form.resetFields();
             onCreate(values);
           })
           .catch((info) => {
@@ -86,56 +52,70 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       <Form
         form={form}
         {...layout}
-        name="dictionaries"
-        // initialValues={props.formData}
+        name="dictionariesItem"
+      // initialValues={props.formData}
       >
         <Form.Item
-          name="name"
-          label="用户名"
+          name="DictSortId"
+          label="字典分类"
           rules={[
             {
               required: true,
-              message: 'Input something!',
+              message: '请选择字典分类！',
             },
           ]}
         >
-          <Input placeholder="placeholder" />
+          <Select placeholder='请选择字典分类！'>
+            {
+              dicSortsData.map(item => {
+                return <Option key={item.DictSortId} value={item.DictSortId}>{item.DictSortName}</Option>
+              })
+            }
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="DictItemName"
+          label="字典项名称"
+          rules={[
+            {
+              required: true,
+              message: '请输入字典项名称！',
+            },
+          ]}
+        >
+          <Input placeholder="请输入字典项名称！" maxLength={100} />
+        </Form.Item>
+        <Form.Item
+          name="DictItemCode"
+          label="字典项编码"
+          rules={[
+            {
+              required: true,
+              message: '请输入字典项编码！',
+            },
+          ]}
+        >
+          <Input placeholder="请输入字典项编码！" maxLength={100} />
         </Form.Item>
 
         <Form.Item
-          name="psw"
-          label="密码"
+          name="ListOrder"
+          label="排序"
           rules={[
             {
               required: true,
-              message: 'Input something!',
+              message: '请输入顺序号！',
             },
           ]}
         >
-          <Search placeholder="placeholder" enterButton="重置" onSearch={reset} />
+          <Input placeholder="请输入顺序号！" maxLength={10} />
         </Form.Item>
-
-        <Form.Item name="address" label="用户姓名">
-          <Input placeholder="placeholder" />
+        <Form.Item
+          name="Remark"
+          label="备注"
+        >
+          <Input.TextArea placeholder="备注" autoSize={{ minRows: 2, maxRows: 6 }} maxLength={500} />
         </Form.Item>
-
-        <Form.Item name="address" label="联系电话">
-          <Input placeholder="placeholder" />
-        </Form.Item>
-
-        <Row>
-          <Col span={12}>
-            <Form.Item {...layoutSingle} name="isadmin" label="是否管理员">
-              <Checkbox />
-            </Form.Item>
-          </Col>
-
-          <Col span={12}>
-            <Form.Item {...layoutSingle} name="address" label="是否启用">
-              <Checkbox />
-            </Form.Item>
-          </Col>
-        </Row>
       </Form>
     </Modal>
   );

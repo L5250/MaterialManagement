@@ -72,13 +72,13 @@ const BasicLayout = (props) => {
     },
   } = props;
   const menuDataRef = useRef([]);
-  useEffect(() => {
-    if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (dispatch) {
+  //     dispatch({
+  //       type: 'user/fetchCurrent',
+  //     });
+  //   }
+  // }, []);
   /** Init variables */
 
   const handleMenuCollapse = (payload) => {

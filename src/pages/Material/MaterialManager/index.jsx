@@ -1,26 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import {
-  Card,
-  Alert,
-  Typography,
   Table,
   Space,
-  Row,
-  Col,
-  Layout,
   Button,
-  Dropdown,
-  Menu,
   Modal,
-  message,
   Input,
-  Form,
   Checkbox
 } from 'antd';
 import { connect } from 'umi';
-import ProCard from '@ant-design/pro-card';
-import { } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 
 const { Search } = Input;
@@ -32,33 +20,13 @@ const MaterialManager = (props) => {
 
   // 获取自愈材料列表
   const getData = (params = { isInvalid: 1, keyWords: '' }) => {
-    console.log(11121,params);
     dispatch({
       type: "materialManager/getData",
-      params: { isInvalid: params.isInvalid || props.isInvalid, keyWords: params.keyWords || props.keyWords }
-    }).then(res => {
-      console.log(res);
-      if (res.state) {
-        console.log(res);
-      } else {
-        dispatch({
-          type: "materialManager/setState",
-          params: {
-            data: [
-              {
-                key: 1,
-                MaterialName: 111
-              }
-            ]
-          }
-        })
-      }
+      params: { isInvalid: params.isInvalid || props.isInvalid, keyWords: params.keyWords ?? props.keyWords }
     })
   };
 
-  // console.log(process.env.NODE_ENV, 'eeee');
   const onCreate = (values) => {
-    console.log('Received values of form: ', values);
     setVisible(false);
   };
   const add = () => {
@@ -75,8 +43,7 @@ const MaterialManager = (props) => {
 
   // 编辑
   const edit = (record) => {
-    console.log(record);
-    props.formRef.setFieldsValue({ ...record});
+    props.formRef.setFieldsValue({ ...record });
     props.dispatch({
       type: 'materialManager/setState',
       params: {
@@ -93,14 +60,12 @@ const MaterialManager = (props) => {
       title: '提示',
       content: '确认删除自愈材料？',
       onOk: () => {
-        console.log('ok');
       },
     });
   };
 
   // 查询
   const onSearch = (value) => {
-    console.log(value);
     dispatch({
       type: 'materialManager/setState',
       params: { keyWords: value }
@@ -110,7 +75,6 @@ const MaterialManager = (props) => {
 
   // 显示禁用的材料
   const invalidChange = (e) => {
-    console.log(e.target.checked);
     dispatch({
       type: 'materialManager/setState',
       params: { isInvalid: e.target.checked }
@@ -120,7 +84,7 @@ const MaterialManager = (props) => {
 
 
   useEffect(() => {
-    // getData()
+    getData()
   }, [])
 
   // 表格列

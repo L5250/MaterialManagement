@@ -1,4 +1,4 @@
-import React, { useState, useImperativeHandle, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'umi';
 import { Button, Modal, Form, Input, Radio, Row, Col, Upload, message, Select } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
@@ -8,15 +8,13 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-const layoutSingle = {
-  labelCol: { span: 4 },
-};
+
 const { Option } = Select;
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
   const imageUrl = form.getFieldValue('image');
-
+  const { loading } = props
   useEffect(() => {
     props.dispatch({
       type: 'materialEnter/setState',
@@ -42,12 +40,10 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     </div>
   );
 
-  const addType = () => {
-    console.log(122);
-  };
 
   return (
     <Modal
+      confirmLoading={loading && loading.global}
       forceRender
       width={760}
       visible={visible}
@@ -62,16 +58,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             form.resetFields();
             onCreate(values);
           })
-          .catch((info) => {
-            console.log('Validate Failed:', info);
-          });
       }}
     >
       <Form
         form={form}
         {...layout}
         name="materialEnter"
-        // initialValues={props.formData}
+      // initialValues={props.formData}
       >
         <Row gutter={24}>
           <Col span={12}>
@@ -163,13 +156,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
                 showUploadList={false}
                 // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 beforeUpload={beforeUpload}
-                // onChange={this.handleChange}
+              // onChange={this.handleChange}
               >
                 {imageUrl ? (
                   <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
                 ) : (
-                  uploadButton
-                )}
+                    uploadButton
+                  )}
               </Upload>
             </Form.Item>
           </Col>

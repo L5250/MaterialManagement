@@ -1,52 +1,42 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import {
-  Card,
-  Alert,
-  Typography,
   Table,
   Space,
-  Row,
-  Col,
   Layout,
   Button,
-  Dropdown,
-  Menu,
   Modal,
-  message,
   Input,
   Form,
 } from 'antd';
 import { connect } from 'umi';
-import ProCard from '@ant-design/pro-card';
-import { } from '@ant-design/icons';
-
 import ModalForm from './components/modalForm';
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 const { Search } = Input;
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
 const DocumentManagement = (props) => {
-  const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
 
-  const { dispatch } = props
+  const { dispatch, rowData, loading } = props
 
   // 获取文献
   const getData = (params = { year: 0, keyWords: '' }) => {
     dispatch({
       type: "document/getData",
-      params: { year: params.year || props.year, keyWords: params.keyWords || props.keyWords }
+      params: { year: params.year || props.year, keyWords: params.keyWords ?? props.keyWords }
     })
   };
   const onCreate = (values) => {
-    console.log('Received values of form: ', values);
-    setVisible(false);
+    dispatch({
+      type: "document/saveLiter",
+      params: { formData: { ...values, LiterId: rowData.LiterId || '' } }
+    }).then(res => {
+      if (res.State) {
+        setVisible(false);
+        getData()
+      }
+    })
   };
   const add = () => {
     props.formRef.resetFields();
@@ -71,19 +61,27 @@ const DocumentManagement = (props) => {
     });
     setVisible(true);
   };
-  const deleteItem = () => {
+
+  // 删除
+  const deleteItem = (record) => {
     Modal.confirm({
       title: '提示',
       content: '确认删除自愈材料？',
       onOk: () => {
-        console.log('ok');
+        dispatch({
+          type: "document/deleteLiter",
+          params: { id: record.LiterId }
+        }).then(res => {
+          if (res.State) {
+            getData()
+          }
+        })
       },
     });
   };
 
   // 查询
   const onSearch = (value) => {
-    console.log(value);
     dispatch({
       type: 'document/setState',
       params: { keyWords: value }
@@ -93,7 +91,7 @@ const DocumentManagement = (props) => {
 
   useEffect(() => {
     getData()
-  })
+  }, [])
 
   // 表格列
   const columns = [
@@ -128,10 +126,9 @@ const DocumentManagement = (props) => {
       dataIndex: '',
       align: 'center',
       width: 200,
+      fixed: "right",
       render: (record) => (
         <Space size="middle">
-          {/* <Button title="编辑" icon={<EditOutlined />} type="primary" />
-          <Button title="删除" icon={<DeleteOutlined />} type="danger" /> */}
           <a onClick={() => edit(record)}>编辑</a>
           <a onClick={() => deleteItem(record)}>删除</a>
         </Space>
@@ -161,13 +158,14 @@ const DocumentManagement = (props) => {
         <Content>
 
           <Table
+            loading={loading && loading.global}
             style={{ height: "100%" }}
             columns={columns}
             dataSource={props.data}
             rowKey="LiterId"
             pagination={false}
             // scroll={{ y: 'calc(100vh - 300px)' }}
-            scroll={{ y: '100%' }}
+            scroll={{ x: 1200, y: '100%' }}
           />
         </Content>
       </Layout>

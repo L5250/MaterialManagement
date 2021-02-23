@@ -8,7 +8,6 @@ import request from '@/utils/request';
 // }
 
 async function login(param = {}) {
-  console.log(222);
   return request('/api/ActionApi/Login/GetUserInfo', { params: param });
 }
 

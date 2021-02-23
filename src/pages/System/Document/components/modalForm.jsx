@@ -1,50 +1,29 @@
-import React, { useState, useImperativeHandle, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'umi';
-import { Button, Modal, Form, Input, Radio, Row, Col, Upload, message } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, InputNumber ,Checkbox} from 'antd';
 
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
 
-const layoutSingle = {
-  labelCol: { span: 4 },
-};
 
 const { TextArea } = Input;
 
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
-
-  const imageUrl = form.getFieldValue('image');
-
+  const { loading } = props
   useEffect(() => {
     props.dispatch({
       type: 'document/setState',
       params: { formRef: form },
     });
   }, []);
-  function beforeUpload(file) {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
-  }
 
-  const uploadButton = (
-    <div>
-      {props.loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+
   return (
     <Modal
+      confirmLoading={loading && loading.global}
       forceRender
       width={460}
       visible={visible}
@@ -56,7 +35,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         form
           .validateFields()
           .then((values) => {
-            form.resetFields();
             onCreate(values);
           })
           .catch((info) => {
@@ -68,7 +46,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         name={'liter'}
         form={form}
         {...layout}
-        // initialValues={props.formData}
+      // initialValues={props.formData}
       >
         <Form.Item
           name="LiterCode"
@@ -92,7 +70,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
-          <Input placeholder="请输入文献年份" />
+          <InputNumber style={{ width: "100%" }} placeholder="请输入文献年份" min={0} maxLength={4} />
         </Form.Item>
         <Form.Item
           name="LiterName"
@@ -105,6 +83,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           ]}
         >
           <TextArea placeholder="请输入文献名称" rows={4} />
+        </Form.Item>
+
+        <Form.Item
+          name="IsValid"
+          label="是否有效"
+        >
+          <Checkbox/>
         </Form.Item>
       </Form>
     </Modal>

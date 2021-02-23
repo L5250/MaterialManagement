@@ -1,34 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import {
-  Card,
-  Alert,
-  Typography,
   Table,
   Space,
-  Row,
-  Col,
-  Layout,
   Button,
-  Dropdown,
-  Menu,
   Modal,
-  message,
   Input,
-  Form,
 } from 'antd';
 import { connect } from 'umi';
-import ProCard from '@ant-design/pro-card';
-import { } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 
 const { Search } = Input;
 
 const MaterialEnter = (props) => {
   const [visible, setVisible] = useState(false);
-  console.log(process.env.NODE_ENV, 'eeee');
   const onCreate = (values) => {
-    console.log('Received values of form: ', values);
     setVisible(false);
   };
   const add = () => {
@@ -65,13 +51,11 @@ const MaterialEnter = (props) => {
   };
 
   const onSearch = (value) => {
-    console.log(value);
     props
       .dispatch({
         type: 'materialEnter/text',
       })
       .then((res) => {
-        console.log(res);
       });
   };
 

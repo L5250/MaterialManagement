@@ -1,17 +1,33 @@
 import request from '@/utils/request';
 
-// export async function getData(params) {
-//   return request('/api/login/account', {
-//     method: 'POST',
-//     data: params,
-//   });
-// }
-async function getData(mobile) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+// 获取字典分类列表
+async function getDictSorts(params) {
+  return request(`/api/ActionApi/SysSetting/GetDictSorts`, { params });
 }
-async function text(param = {}) {
-  console.log(222);
-  return request('/api/users', { params: param });
+// 删除字典分类
+async function deleteDictSort(params) {
+  return request(`/api/ActionApi/SysSetting/DeleteDictSort`, { params });
+}
+// 保存字典分类
+async function saveDictSort(params) {
+  return request(`/api/ActionApi/SysSetting/SaveDictSort`, { method: "POST", data: params });
 }
 
-export default { getData, text };
+// 根据字典分类ID获取字典项列表
+async function getDictItems(params) {
+  return request(`/api/ActionApi/SysSetting/GetDictItems`, { params });
+}
+
+// 删除字典项
+async function deleteDictItem(params) {
+  return request(`/api/ActionApi/SysSetting/DeleteDictItem`, { params });
+}
+
+// 保存字典项
+async function saveDictItem(params) {
+  return request(`/api/ActionApi/SysSetting/SaveDictItem`, { method: "POST", data: params });
+}
+
+
+
+export default { getDictSorts, deleteDictSort, saveDictSort, getDictItems, deleteDictItem, saveDictItem };

@@ -1,26 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import {
-  Card,
-  Alert,
-  Typography,
   Table,
   Space,
   Row,
   Col,
   Layout,
   Button,
-  Dropdown,
-  Menu,
   Modal,
-  message,
   Input,
-  Checkbox,
-  Form,
 } from 'antd';
 import { connect } from 'umi';
-import ProCard from '@ant-design/pro-card';
-import { } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 import ModalFormDicItem from './components/modalFormItem';
 
@@ -28,58 +18,163 @@ const { Search } = Input;
 const { Header, Content } = Layout;
 
 const Dictionaries = (props) => {
+
   const [visible, setVisible] = useState(false);
-  console.log(process.env.NODE_ENV, 'eeee');
+  const [visibleItem, setVisibleItem] = useState(false);
+
+  const { dispatch, rowData, rowItemData, loading, formDicItemRef } = props
+
+  // 获取字典分类
+  const getDictSorts = (params = { year: 0, keyWords: '' }) => {
+    dispatch({
+      type: "dictionaries/getDictSorts",
+      params: { keyWords: params.keyWords ?? props.keyWords }
+    })
+  }
+
   const onCreate = (values) => {
-    console.log('Received values of form: ', values);
-    setVisible(false);
+    dispatch({
+      type: 'dictionaries/saveDictSort',
+      params: {
+        formData: {
+          ...values,
+          DictSortId: rowData.DictSortId || '',
+        }
+      },
+    }).then(res => {
+      if (res.State) {
+        setVisible(false);
+        getDictSorts()
+      }
+    })
   };
-  const add = () => {
+  const addSorts = () => {
     props.formRef.resetFields();
-    props.dispatch({
+    dispatch({
       type: 'dictionaries/setState',
       params: {
         rowData: {},
-        title: '新增自愈材料',
+        title: '新增字典分类',
       },
     });
     setVisible(true);
   };
 
-  const edit = (record) => {
+  const editSorts = (record) => {
     props.formRef.setFieldsValue({ ...record });
     props.dispatch({
       type: 'dictionaries/setState',
       params: {
         rowData: record,
-        title: '编辑自愈材料',
+        title: '编辑字典分类',
       },
     });
     setVisible(true);
   };
-  const deleteItem = () => {
+  const deleteSorts = (record) => {
     Modal.confirm({
       title: '提示',
-      content: '确认删除自愈材料？',
+      content: '确认删除字典分类？',
       onOk: () => {
-        console.log('ok');
+        props.dispatch({
+          type: 'dictionaries/deleteDictSort',
+          params: {
+            keyId: record.DictSortId,
+          },
+        }).then(res => {
+          if (res.State) {
+            getDictSorts();
+            dispatch({
+              type: "dictionaries/setState",
+              params: { dicItemData: [] }
+            })
+          }
+        });
       },
     });
   };
-  const resetPassword = () => {
-    console.log('resetPsw');
+  const onSearch = (value) => {
+    dispatch({
+      type: 'dictionaries/setState',
+    })
+
   };
 
-  const onSearch = (value) => {
-    console.log(value);
-    props
-      .dispatch({
-        type: 'dictionaries/text',
-      })
-      .then((res) => {
-        console.log(res);
-      });
+
+  // 字典项
+  const getDicItemData = (record) => {
+    dispatch({
+      type: "dictionaries/getDictItems",
+      params: {
+        keyId: record.DictSortId
+      }
+    }).then(res => {
+
+    })
+  }
+  const onCreateItem = (values) => {
+    dispatch({
+      type: 'dictionaries/saveDictItem',
+      params: {
+        formData: {
+          ...values,
+          DictItemId: rowItemData.DictItemId || '',
+        }
+      },
+    }).then(res => {
+      if (res.State) {
+        setVisibleItem(false);
+        getDicItemData()
+      }
+    })
   };
+  const addItem = () => {
+    formDicItemRef.resetFields();
+    dispatch({
+      type: 'dictionaries/setState',
+      params: {
+        rowItemData: {},
+        title: '新增字典项',
+      },
+    });
+    setVisibleItem(true);
+  };
+
+  const editItem = (record) => {
+    formDicItemRef.setFieldsValue({ ...record });
+    dispatch({
+      type: 'dictionaries/setState',
+      params: {
+        rowItemData: record,
+        title: '编辑字典项',
+      },
+    });
+    setVisibleItem(true);
+  };
+  const deleteItem = (record) => {
+    Modal.confirm({
+      title: '提示',
+      content: '确认删除字典项？',
+      onOk: () => {
+        props.dispatch({
+          type: 'dictionaries/deleteDictItem',
+          params: {
+            keyId: record.DictItemId,
+          },
+        }).then(res => {
+          if (res.State) {
+            getDicItemData();
+          }
+        });
+      },
+    });
+  };
+  const onSearchItem = (value) => {
+
+  };
+  useEffect(() => {
+    getDictSorts()
+  }, [])
 
   // 表格列
   const columns = [
@@ -112,8 +207,9 @@ const Dictionaries = (props) => {
       width: 200,
       render: (record) => (
         <Space size="middle">
-          <a onClick={() => edit(record)}>编辑</a>
-          <a onClick={() => deleteItem(record)}>删除</a>
+          <a onClick={() => getDicItemData(record)}>查看字典项</a>
+          <a onClick={() => editSorts(record)}>编辑</a>
+          <a onClick={() => deleteSorts(record)}>删除</a>
         </Space>
       ),
     },
@@ -149,7 +245,7 @@ const Dictionaries = (props) => {
       width: 200,
       render: (record) => (
         <Space size="middle">
-          <a onClick={() => edit(record)}>编辑</a>
+          <a onClick={() => editItem(record)}>编辑</a>
           <a onClick={() => deleteItem(record)}>删除</a>
         </Space>
       ),
@@ -158,85 +254,58 @@ const Dictionaries = (props) => {
   ]
 
   return (
-    <PageContainer
-    // header={{
-    //   extra: [
-    //     <Checkbox key="3">显示禁用的用户</Checkbox>,
-    //     <Search
-    //       key="1"
-    //       placeholder={'输入用户名或用户姓名查询'}
-    //       allowClear
-    //       enterButton
-    //       style={{ width: 300 }}
-    //       onSearch={onSearch}
-    //     />,
-    //     <Button onClick={add} key="2" type="primary">
-    //       新增
-    //     </Button>,
-    //   ],
-    // }}
-    >
-      {/* <Table
-        columns={columns}
-        dataSource={props.data}
-        rowKey="name"
-        scroll={{ y: 'calc(100vh - 320px)' }}
-      /> */}
+    <PageContainer>
       <Layout>
-        <Row gutter={24}>
-          <Col span={12}>
-            <Layout>
-              <Header style={{ marginBottom: 10 }}>
-                <Space>
-                  <Search
-                    placeholder={'输入用户名或用户姓名查询'}
-                    allowClear
-                    enterButton
-                    style={{ width: 300 }}
-                    onSearch={onSearch}
-                  />
-                  <Button style={{ textAlign: "right" }} onClick={add} key="2" type="primary">新增</Button>
-                </Space>
-              </Header>
-              <Content>
-                <Table
-                  columns={columns}
-                  dataSource={props.data}
-                  rowKey="DictSortId"
-                  pagination={false}
-                  scroll={{ x: 800, y: 'calc(100vh - 300px)' }}
+        <Layout>
+          <Header style={{ marginBottom: 10 }}>
+            <Space style={{ display: "flex", justifyContent: "space-between" }}>
+              <Search
+                placeholder={'输入字典分类查询'}
+                allowClear
+                enterButton
+                style={{ width: 300 }}
+                onSearch={onSearch}
+              />
+              <Button style={{ textAlign: "right" }} onClick={addSorts} key="2" type="primary">新增</Button>
+            </Space>
+          </Header>
+          <Content>
+            <Table
+              loading={loading && loading.global}
+              columns={columns}
+              dataSource={props.dicSortsData}
+              rowKey="DictSortId"
+              pagination={false}
+              scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
+            />
+          </Content>
+        </Layout>
 
-                />
-              </Content>
-            </Layout>
-          </Col>
-          <Col span={12}>
-            <Layout>
-              <Header style={{ marginBottom: 10 }}>
-                <Space>
-                  <Search
-                    placeholder={'输入用户名或用户姓名查询'}
-                    allowClear
-                    enterButton
-                    style={{ width: 300 }}
-                    onSearch={onSearch}
-                  />
-                  <Button style={{ textAlign: "right" }} onClick={add} key="2" type="primary">新增</Button>
-                </Space>
-              </Header>
-              <Content>
-                <Table
-                  columns={dicItemColumns}
-                  dataSource={props.data}
-                  rowKey="DictItemId"
-                  pagination={false}
-                  scroll={{ x: 800, y: 'calc(100vh - 300px)' }}
+        <Layout style={{ marginTop: 10 }}>
+          <Header style={{ marginBottom: 10 }}>
+            <Space style={{ display: "flex", justifyContent: "space-between" }}>
+              <Search
+                placeholder={'输入字典名称查询'}
+                allowClear
+                enterButton
+                style={{ width: 300 }}
+                onSearch={onSearchItem}
+              />
+              <Button style={{ textAlign: "right" }} onClick={addItem} key="2" type="primary">新增</Button>
+            </Space>
+          </Header>
+          <Content>
+            <Table
+              loading={loading && loading.global}
+              columns={dicItemColumns}
+              dataSource={props.dicItemData}
+              rowKey="DictItemId"
+              pagination={false}
+              scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
 
-                />
-              </Content>
-            </Layout>
-          </Col>
-        </Row>
+            />
+          </Content>
+        </Layout>
       </Layout>
       <ModalForm
         visible={visible}
@@ -245,11 +314,11 @@ const Dictionaries = (props) => {
           setVisible(false);
         }}
       />
-       <ModalFormDicItem
-        visible={visible}
-        onCreate={onCreate}
+      <ModalFormDicItem
+        visible={visibleItem}
+        onCreate={onCreateItem}
         onCancel={() => {
-          setVisible(false);
+          setVisibleItem(false);
         }}
       />
     </PageContainer>

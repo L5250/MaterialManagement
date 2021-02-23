@@ -3,7 +3,7 @@ import service from './service';
 export default {
   namespace: 'document',
   state: {
-    data: [{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},],
+    data: [],
     formRef: {},
     rowData: {},
     title: "",
@@ -14,25 +14,29 @@ export default {
 
     // 获取文献列表
     *getData({ params }, { call, put }) {
-      const response = yield call(service.getData(params));
+      console.log(params)
+      const { Data, State } = yield call(service.getData, params);
       yield put({
-        type: 'setData',
-        params: { data: [{ a: 1 }] },
+        type: 'setState',
+        params: { data: Data },
       });
+      return { Data, State }
     },
 
     // 保存文献列表
     *saveLiter({ params }, { call, put }) {
-      const response = yield call(service.saveLiter(params));
-      yield put({
-        type: 'setData',
-        params: { data: [{ a: 1 }] },
-      });
+      const { Data, State } = yield call(service.saveLiter, params);
+      // yield put({
+      //   type: 'setState',
+      //   params: { data: [{ a: 1 }] },
+      // });
+      return { Data, State }
     },
 
     // 删除文献列表
     *deleteLiter({ params }, { call, put }) {
-      const response = yield call(service.deleteLiter(params));
+      const { Data, State } = yield call(service.deleteLiter, params);
+      return { Data, State }
 
     },
   },

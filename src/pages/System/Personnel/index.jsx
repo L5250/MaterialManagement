@@ -27,7 +27,6 @@ const { Search } = Input;
 
 const Personnel = (props) => {
   const [visible, setVisible] = useState(false);
-  console.log(process.env.NODE_ENV, 'eeee');
   const onCreate = (values) => {
     console.log('Received values of form: ', values);
     setVisible(false);

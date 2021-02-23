@@ -36,29 +36,6 @@ export default [
                 icon: 'smile',
                 component: './Welcome',
               },
-              {
-                path: '/admin',
-                name: 'admin',
-                icon: 'crown',
-                component: './Admin',
-                authority: ['admin'],
-                routes: [
-                  {
-                    path: '/admin/sub-page',
-                    name: 'sub-page',
-                    icon: 'smile',
-                    component: './Welcome',
-                    authority: ['admin'],
-                  },
-                ],
-              },
-
-              {
-                name: 'list.table-list',
-                icon: 'table',
-                path: '/list',
-                component: './TableList',
-              },
 
               //
               {
@@ -70,7 +47,7 @@ export default [
                     name: '材料录入',
                     path: '/Materia/MaterialEnter',
                     component: './Material/MaterialEnter',
-                    // authority: ['admin'],
+                    authority: ['admin'],
                   },
                   {
                     name: '材料管理',

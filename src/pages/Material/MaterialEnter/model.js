@@ -10,22 +10,12 @@ export default {
   },
   effects: {
     *getData({ params }, { call, put }) {
-      const response = yield call(service.getData(params));
+      const { Data, State } = yield call(service.getData(params));
       yield put({
-        type: 'setData',
+        type: 'setState',
         params,
       });
-    },
-    //
-    *text({ params }, { call, put }) {
-      console.log(1111);
-      const response = yield call(service.text, params);
-      console.log(response);
-      yield put({
-        type: 'setData',
-        params,
-      });
-      return response;
+      return { Data, State }
     },
   },
   reducers: {

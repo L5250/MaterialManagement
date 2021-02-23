@@ -28,7 +28,7 @@ const { Search } = Input;
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
-  const imageUrl = form.getFieldValue('image');
+  const { loading } = props;
 
   useEffect(() => {
     props.dispatch({
@@ -64,6 +64,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   return (
     <Modal
+      confirmLoading={loading && loading.global}
       forceRender
       width={460}
       visible={visible}
@@ -87,7 +88,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         form={form}
         {...layout}
         name="personnel"
-        // initialValues={props.formData}
+      // initialValues={props.formData}
       >
         <Form.Item
           name="name"

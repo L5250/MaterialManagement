@@ -18,7 +18,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   const imageUrl = form.getFieldValue('image');
 
-  const { dispatch, literKeys } = props
+  const { dispatch, literKeys, loading } = props
   useEffect(() => {
     props.dispatch({
       type: 'materialManager/setState',
@@ -97,6 +97,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   return (
     <Modal
+      confirmLoading={loading && loading.global}
       forceRender
       width={760}
       visible={visible}
@@ -227,7 +228,9 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       </Form>
 
       {/* 相关文献 */}
-      <Modal visible={literVisible} centered width={1200} height={500} okText="确定" cancelText="取消" title={"相关文献"} onOk={literOk} onCancel={() => setLiterVisible(false)} >
+      <Modal
+        confirmLoading={loading && loading.global}
+        visible={literVisible} centered width={1200} height={500} okText="确定" cancelText="取消" title={"相关文献"} onOk={literOk} onCancel={() => setLiterVisible(false)} >
         <Table
           columns={literColumns}
           dataSource={props.literData}
@@ -249,7 +252,9 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       </Modal>
 
       {/* 应用实例 */}
-      <Modal visible={caseVisible} centered width={1200} height={500} okText="确定" cancelText="取消" title={"应用实例"} onOk={caseOk} onCancel={() => setCaseVisible(false)} >
+      <Modal
+        confirmLoading={loading && loading.global}
+        visible={caseVisible} centered width={1200} height={500} okText="确定" cancelText="取消" title={"应用实例"} onOk={caseOk} onCancel={() => setCaseVisible(false)} >
 
       </Modal>
 

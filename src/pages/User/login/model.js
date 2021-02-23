@@ -13,17 +13,26 @@ const Model = {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(service.login, payload);
+      console.log(response)
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
+        payload: response.Data,
       }); // Login successfully
 
-      if (response.status === 'ok') {
+      if (response.State) {
+        if (!response.Data.IsValid) {
+          message.error("用户已禁用，不可登录！")
+          return
+        }
+        if (response.Data.IsDeleted) {
+          message.error("用户已删除，不可登录！")
+          return
+        }
+        localStorage.setItem("userInfo", JSON.stringify(response.Data))
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
-        message.success('🎉 🎉 🎉  登录成功！');
+        message.success('登录成功！');
         let { redirect } = params;
-
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
 
@@ -40,8 +49,6 @@ const Model = {
         }
 
         history.replace(redirect || '/');
-      }else{
-        message.error("账号密码错误")
       }
     },
 
@@ -54,12 +61,14 @@ const Model = {
             redirect: window.location.href,
           }),
         });
+        localStorage.removeItem("userInfo")
+        localStorage.setItem("antd-pro-authority",'')
       }
     },
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      setAuthority(payload.IsAdmin ? "admin" : "");
       return { ...state, status: payload.status, type: payload.type };
     },
   },
