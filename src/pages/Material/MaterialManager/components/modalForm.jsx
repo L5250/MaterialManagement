@@ -2,6 +2,8 @@ import React, { useState, useImperativeHandle, useEffect, useRef } from 'react';
 import { connect } from 'umi';
 import { Button, Modal, Form, Input, Radio, Row, Col, Upload, message, Table } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import BraftEditor from 'braft-editor';
+import 'braft-editor/dist/index.css';
 
 const layout = {
   labelCol: { span: 8 },
@@ -15,6 +17,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
   const [literVisible, setLiterVisible] = useState(false)
   const [caseVisible, setCaseVisible] = useState(false)
+  const [editorState, setEeditorState] = useState(BraftEditor.createEditorState(null))
 
   const imageUrl = form.getFieldValue('image');
 
@@ -39,7 +42,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   const uploadButton = (
     <div>
-      {props.loading && props.loading.global ? <LoadingOutlined /> : <PlusOutlined />}
+      {props.loading && props.loading.models.materialManager ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
@@ -54,13 +57,22 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   // 打开文献弹框
   const openLiter = () => {
-    const keys = form.getFieldValue("LiterIds").split(",")
-    console.log(keys);
+    const LiterIds = form.getFieldValue("LiterIds") || ''
+    const keys = LiterIds.split(",")
+    // console.log(keys);
+
     dispatch({
-      type: "materialManager/setState",
-      params: { literKeys: keys }
+      type: "materialManager/getValidLiterInfo",
+      params: { literIds: '' }
+    }).then(res => {
+      if (res.State) {
+        setLiterVisible(true)
+        dispatch({
+          type: "materialManager/setState",
+          params: { literKeys: keys }
+        })
+      }
     })
-    setLiterVisible(true)
   }
   // 文献弹框表格
   const literColumns = [
@@ -79,25 +91,36 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   // 应用实例
   const openCase = () => {
-    const keys = form.getFieldValue("Examples")
-    console.log(keys);
+    const Examples = form.getFieldValue("Examples")
+    // console.log(keys);
     // dispatch({
     //   type: "materialManager/setState",
     //   params: { literKeys: keys }
     // })
+    const htmlString = Examples || null
+    setEeditorState(BraftEditor.createEditorState(htmlString))
+    console.log(editorState);
+    console.log(editorState.toHTML());
     setCaseVisible(true)
   }
 
-  // 实例弹框确定
-  const caseOk = () => {
-    console.log(1);
-    form.setFieldsValue({ Examples: 1 })
+  const submitContent = async () => {
+    // 在编辑器获得焦点时按下ctrl+s会执行此方法
+    // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
+    const htmlContent = editorState.toHTML()
+    console.log(JSON.stringify(htmlContent));
   }
 
-
+  const handleEditorChange = (data) => {
+    setEeditorState(data)
+  }
+  // 实例弹框确定
+  const caseOk = () => {
+    submitContent()
+  }
   return (
     <Modal
-      confirmLoading={loading && loading.global}
+      confirmLoading={loading && loading.models.materialManager}
       forceRender
       width={760}
       visible={visible}
@@ -109,12 +132,8 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         form
           .validateFields()
           .then((values) => {
-            form.resetFields();
             onCreate(values);
           })
-          .catch((info) => {
-            console.log('Validate Failed:', info);
-          });
       }}
     >
       <Form
@@ -215,7 +234,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           </Col>
           <Col span={12}>
             <Form.Item name="LiterIds" label="相关文献">
-              <Button onClick={openLiter} type="primary">查看/添加</Button>
+              <Button onClick={openLiter} type="primary" loading={loading && loading.models.materialManager}>查看/添加</Button>
             </Form.Item>
           </Col>
 
@@ -229,7 +248,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
       {/* 相关文献 */}
       <Modal
-        confirmLoading={loading && loading.global}
+        confirmLoading={loading && loading.models.materialManager}
         visible={literVisible} centered width={1200} height={500} okText="确定" cancelText="取消" title={"相关文献"} onOk={literOk} onCancel={() => setLiterVisible(false)} >
         <Table
           columns={literColumns}
@@ -253,9 +272,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
       {/* 应用实例 */}
       <Modal
-        confirmLoading={loading && loading.global}
-        visible={caseVisible} centered width={1200} height={500} okText="确定" cancelText="取消" title={"应用实例"} onOk={caseOk} onCancel={() => setCaseVisible(false)} >
-
+        confirmLoading={loading && loading.models.materialManager}
+        visible={caseVisible} centered width={1200} okText="确定" cancelText="取消" title={"应用实例"} onOk={caseOk} onCancel={() => setCaseVisible(false)} >
+        <BraftEditor
+          value={editorState}
+          onChange={handleEditorChange}
+          onSave={submitContent}
+        />
       </Modal>
 
     </Modal>

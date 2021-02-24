@@ -3,7 +3,7 @@ import { connect } from 'umi';
 import {
   Modal,
   Form,
-  Input,
+  Input, Switch
 } from 'antd';
 
 const layout = {
@@ -24,7 +24,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   return (
     <Modal
-      confirmLoading={loading && loading.global}
+      confirmLoading={loading && loading.models.dictionaries}
       forceRender
       width={460}
       visible={visible}
@@ -43,6 +43,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       <Form
         form={form}
         {...layout}
+        initialValues={{ IsModify: true, IsEnable: true }}
         name="dictionaries"
       >
         <Form.Item
@@ -87,6 +88,20 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           label="备注"
         >
           <Input.TextArea placeholder="备注" autoSize={{ minRows: 2, maxRows: 6 }} maxLength={500} />
+        </Form.Item>
+        <Form.Item
+          name="IsModify"
+          label="是否允许修改"
+          valuePropName="checked"
+        >
+          <Switch />
+        </Form.Item>
+        <Form.Item
+          name="IsEnable"
+          label="是否启用"
+          valuePropName="checked"
+        >
+          <Switch />
         </Form.Item>
       </Form>
     </Modal>

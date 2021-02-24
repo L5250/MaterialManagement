@@ -9,9 +9,14 @@ import request from '@/utils/request';
 async function getData(params) {
   return request(`/api/ActionApi/MaterialManage/GetMaterialRecords`, { params });
 }
-async function text(params = {}) {
-  console.log(222);
-  return request('/api/users', { params });
+async function saveMaterialRecord(params) {
+  return request(`/api/ActionApi/MaterialManage/SaveMaterialRecord`, { method: 'POST', params });
+}
+async function deleteMaterialRecord(params) {
+  return request(`/api/ActionApi/MaterialManage/DeleteMaterialRecord`, { params });
+}
+async function getValidLiterInfo(params) {
+  return request(`/api/ActionApi/MaterialManage/GetValidLiterInfo`, { params });
 }
 
-export default { getData, text };
+export default { getData, saveMaterialRecord, deleteMaterialRecord, getValidLiterInfo };

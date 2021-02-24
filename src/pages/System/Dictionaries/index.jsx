@@ -38,6 +38,9 @@ const Dictionaries = (props) => {
       params: {
         formData: {
           ...values,
+          IsModify: values.IsModify ? 1 : 0,
+          // IsEnable: values.IsEnable ? 1 : 0,
+          IsEnable: 1,
           DictSortId: rowData.DictSortId || '',
         }
       },
@@ -45,6 +48,10 @@ const Dictionaries = (props) => {
       if (res.State) {
         setVisible(false);
         getDictSorts()
+        dispatch({
+          type: "dictionaries/setState",
+          params: { dicItemData: [] }
+        })
       }
     })
   };
@@ -60,7 +67,8 @@ const Dictionaries = (props) => {
     setVisible(true);
   };
 
-  const editSorts = (record) => {
+  const editSorts = (e, record) => {
+    e.stopPropagation()
     props.formRef.setFieldsValue({ ...record });
     props.dispatch({
       type: 'dictionaries/setState',
@@ -71,7 +79,8 @@ const Dictionaries = (props) => {
     });
     setVisible(true);
   };
-  const deleteSorts = (record) => {
+  const deleteSorts = (e, record) => {
+    e.stopPropagation()
     Modal.confirm({
       title: '提示',
       content: '确认删除字典分类？',
@@ -100,9 +109,12 @@ const Dictionaries = (props) => {
 
   };
 
-
   // 字典项
   const getDicItemData = (record) => {
+    dispatch({
+      type: "dictionaries/setState",
+      params: { rowData: record }
+    })
     dispatch({
       type: "dictionaries/getDictItems",
       params: {
@@ -118,13 +130,17 @@ const Dictionaries = (props) => {
       params: {
         formData: {
           ...values,
+          IsModify: values.IsModify ? 1 : 0,
+          // IsEnable: values.IsEnable ? 1 : 0,
+          IsEnable: 1,
           DictItemId: rowItemData.DictItemId || '',
+          LevelCode: 1,
         }
       },
     }).then(res => {
       if (res.State) {
         setVisibleItem(false);
-        getDicItemData()
+        getDicItemData(rowData)
       }
     })
   };
@@ -163,7 +179,7 @@ const Dictionaries = (props) => {
           },
         }).then(res => {
           if (res.State) {
-            getDicItemData();
+            getDicItemData(rowData);
           }
         });
       },
@@ -175,11 +191,20 @@ const Dictionaries = (props) => {
   useEffect(() => {
     getDictSorts()
   }, [])
-
+  console.log(loading);
   // 表格列
   const columns = [
     {
       title: '序号',
+      align: 'center',
+      dataIndex: '',
+      width: 120,
+      render: (text, record, index) => {
+        return index + 1
+      }
+    },
+    {
+      title: '顺序码',
       align: 'center',
       dataIndex: 'ListOrder',
       width: 120,
@@ -188,6 +213,9 @@ const Dictionaries = (props) => {
       title: '分类名称',
       align: 'center',
       dataIndex: 'DictSortName',
+      render: (text, record) => {
+        return <div onClick={() => getDicItemData(record)}><a >{text}</a></div>
+      }
     },
     {
       title: '分类项编码',
@@ -207,9 +235,8 @@ const Dictionaries = (props) => {
       width: 200,
       render: (record) => (
         <Space size="middle">
-          <a onClick={() => getDicItemData(record)}>查看字典项</a>
-          <a onClick={() => editSorts(record)}>编辑</a>
-          <a onClick={() => deleteSorts(record)}>删除</a>
+          <a onClick={(e) => editSorts(e, record)}>编辑</a >
+          <a disabled={record.IsModify === 0} onClick={(e) => deleteSorts(e, record)}>删除</a>
         </Space>
       ),
     },
@@ -245,8 +272,8 @@ const Dictionaries = (props) => {
       width: 200,
       render: (record) => (
         <Space size="middle">
-          <a onClick={() => editItem(record)}>编辑</a>
-          <a onClick={() => deleteItem(record)}>删除</a>
+          <a disabled={rowData.IsModify === 0} onClick={() => editItem(record)}>编辑</a>
+          <a disabled={rowData.IsModify === 0} onClick={() => deleteItem(record)}>删除</a>
         </Space>
       ),
     },
@@ -271,12 +298,17 @@ const Dictionaries = (props) => {
           </Header>
           <Content>
             <Table
-              loading={loading && loading.global}
+              loading={loading && loading.models.dictionaries}
               columns={columns}
               dataSource={props.dicSortsData}
               rowKey="DictSortId"
               pagination={false}
               scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
+              onRow={record => {
+                return {
+                  onClick: () => { getDicItemData(record) }
+                }
+              }}
             />
           </Content>
         </Layout>
@@ -296,7 +328,7 @@ const Dictionaries = (props) => {
           </Header>
           <Content>
             <Table
-              loading={loading && loading.global}
+              loading={loading && loading.models.dictionaries}
               columns={dicItemColumns}
               dataSource={props.dicItemData}
               rowKey="DictItemId"

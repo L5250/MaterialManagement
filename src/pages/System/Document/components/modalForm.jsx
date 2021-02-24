@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'umi';
-import { Modal, Form, Input, InputNumber ,Checkbox} from 'antd';
+import { Modal, Form, Input, InputNumber, Checkbox } from 'antd';
 
 const layout = {
   labelCol: { span: 8 },
@@ -23,7 +23,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   return (
     <Modal
-      confirmLoading={loading && loading.global}
+      confirmLoading={loading && loading.models.document}
       forceRender
       width={460}
       visible={visible}
@@ -82,14 +82,15 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
-          <TextArea placeholder="请输入文献名称" rows={4} />
+          <TextArea placeholder="请输入文献名称" autoSize={{ minRows: 2, maxRows: 6 }} maxLength={500} />
         </Form.Item>
 
         <Form.Item
           name="IsValid"
           label="是否有效"
+          valuePropName="checked"
         >
-          <Checkbox/>
+          <Checkbox />
         </Form.Item>
       </Form>
     </Modal>

@@ -8,6 +8,7 @@ export default {
     formRef: {},
     formDicItemRef: {},
     rowData: {},
+    rowItemData:{},
     title: '',
   },
   effects: {

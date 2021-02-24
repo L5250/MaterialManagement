@@ -16,10 +16,10 @@ const { Search } = Input;
 const MaterialManager = (props) => {
   const [visible, setVisible] = useState(false);
 
-  const { dispatch } = props
+  const { dispatch, rowData } = props
 
   // 获取自愈材料列表
-  const getData = (params = { isInvalid: 1, keyWords: '' }) => {
+  const getData = (params = { isInvalid: true, keyWords: '' }) => {
     dispatch({
       type: "materialManager/getData",
       params: { isInvalid: params.isInvalid || props.isInvalid, keyWords: params.keyWords ?? props.keyWords }
@@ -27,7 +27,25 @@ const MaterialManager = (props) => {
   };
 
   const onCreate = (values) => {
-    setVisible(false);
+    console.log(values);
+    // setVisible(false);
+    dispatch({
+      type: 'dictionaries/saveDictSort',
+      params: {
+        formData: {
+          ...values,
+          IsValid: true,
+          IsDelete:0,
+          MaterialRecordID: rowData.MaterialRecordID || ""
+        },
+        literIds: ''
+      },
+    }).then(res => {
+      if (res.State) {
+        setVisible(false);
+        getData()
+      }
+    })
   };
   const add = () => {
     props.formRef.resetFields();

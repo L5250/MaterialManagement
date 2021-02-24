@@ -43,7 +43,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   return (
     <Modal
-      confirmLoading={loading && loading.global}
+      confirmLoading={loading && loading.models.materialEnter}
       forceRender
       width={760}
       visible={visible}
@@ -169,7 +169,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           <Col span={12}>
             <Form.Item name="as2d" label="材料自愈类型">
               {/* <Button onClick={addType} icon={<PlusOutlined />} >添加</Button> */}
-              <Select mode="multiple" placeholder="">
+              <Select mode="multiple" placeholder="" style={{height:200}}>
                 <Option value="jack">高分子聚合物</Option>
                 <Option value="lucy">氢键</Option>
                 <Option value="1">静电作用</Option>

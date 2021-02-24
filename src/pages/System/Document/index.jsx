@@ -30,7 +30,7 @@ const DocumentManagement = (props) => {
   const onCreate = (values) => {
     dispatch({
       type: "document/saveLiter",
-      params: { formData: { ...values, LiterId: rowData.LiterId || '' } }
+      params: { formData: { ...values, IsValid: values.IsValid ? 1 : 0, LiterId: rowData.LiterId || '' } }
     }).then(res => {
       if (res.State) {
         setVisible(false);
@@ -158,7 +158,7 @@ const DocumentManagement = (props) => {
         <Content>
 
           <Table
-            loading={loading && loading.global}
+            loading={loading && loading.models.document}
             style={{ height: "100%" }}
             columns={columns}
             dataSource={props.data}
