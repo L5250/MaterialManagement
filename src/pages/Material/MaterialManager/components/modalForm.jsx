@@ -15,13 +15,13 @@ const layoutSingle = {
 };
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
-  const [literVisible, setLiterVisible] = useState(false)
-  const [caseVisible, setCaseVisible] = useState(false)
-  const [editorState, setEeditorState] = useState(BraftEditor.createEditorState(null))
+  const [literVisible, setLiterVisible] = useState(false);
+  const [caseVisible, setCaseVisible] = useState(false);
+  const [editorState, setEeditorState] = useState(BraftEditor.createEditorState(null));
 
   const imageUrl = form.getFieldValue('image');
 
-  const { dispatch, literKeys, loading } = props
+  const { dispatch, literKeys, loading } = props;
   useEffect(() => {
     props.dispatch({
       type: 'materialManager/setState',
@@ -42,7 +42,11 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   const uploadButton = (
     <div>
-      {props.loading && props.loading.models.materialManager ? <LoadingOutlined /> : <PlusOutlined />}
+      {props.loading && props.loading.models.materialManager ? (
+        <LoadingOutlined />
+      ) : (
+        <PlusOutlined />
+      )}
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
@@ -57,67 +61,66 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   // 打开文献弹框
   const openLiter = () => {
-    const LiterIds = form.getFieldValue("LiterIds") || ''
-    const keys = LiterIds.split(",")
+    const LiterIds = form.getFieldValue('LiterIds') || '';
+    const keys = LiterIds.split(',');
     // console.log(keys);
 
     dispatch({
-      type: "materialManager/getValidLiterInfo",
-      params: { literIds: '' }
-    }).then(res => {
+      type: 'materialManager/getValidLiterInfo',
+      params: { literIds: '' },
+    }).then((res) => {
       if (res.State) {
-        setLiterVisible(true)
+        setLiterVisible(true);
         dispatch({
-          type: "materialManager/setState",
-          params: { literKeys: keys }
-        })
+          type: 'materialManager/setState',
+          params: { literKeys: keys },
+        });
       }
-    })
-  }
+    });
+  };
   // 文献弹框表格
   const literColumns = [
-    { dataIndex: "LiterName", title: "文献名称", align: "center" },
-    { dataIndex: "LiterYear", title: "文献年份", align: "center", width: 120 },
-    { dataIndex: "LiterCode", title: "文献DOI号", align: "center", width: 150 },
-    { dataIndex: "Remark", title: "备注", align: "center", width: 200 },
-  ]
+    { dataIndex: 'LiterName', title: '文献名称', align: 'center' },
+    { dataIndex: 'LiterYear', title: '文献年份', align: 'center', width: 120 },
+    { dataIndex: 'LiterCode', title: '文献DOI号', align: 'center', width: 150 },
+    { dataIndex: 'Remark', title: '备注', align: 'center', width: 200 },
+  ];
   // 文献弹框确定
   const literOk = () => {
     console.log(props);
-    form.setFieldsValue({ LiterIds: props.literKeys.join() })
-    setLiterVisible(false)
-  }
-
+    form.setFieldsValue({ LiterIds: props.literKeys.join() });
+    setLiterVisible(false);
+  };
 
   // 应用实例
   const openCase = () => {
-    const Examples = form.getFieldValue("Examples")
+    const Examples = form.getFieldValue('Examples');
     // console.log(keys);
     // dispatch({
     //   type: "materialManager/setState",
     //   params: { literKeys: keys }
     // })
-    const htmlString = Examples || null
-    setEeditorState(BraftEditor.createEditorState(htmlString))
+    const htmlString = Examples || null;
+    setEeditorState(BraftEditor.createEditorState(htmlString));
     console.log(editorState);
     console.log(editorState.toHTML());
-    setCaseVisible(true)
-  }
+    setCaseVisible(true);
+  };
 
   const submitContent = async () => {
     // 在编辑器获得焦点时按下ctrl+s会执行此方法
     // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
-    const htmlContent = editorState.toHTML()
+    const htmlContent = editorState.toHTML();
     console.log(JSON.stringify(htmlContent));
-  }
+  };
 
   const handleEditorChange = (data) => {
-    setEeditorState(data)
-  }
+    setEeditorState(data);
+  };
   // 实例弹框确定
   const caseOk = () => {
-    submitContent()
-  }
+    submitContent();
+  };
   return (
     <Modal
       confirmLoading={loading && loading.models.materialManager}
@@ -129,18 +132,16 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       cancelText="取消"
       onCancel={onCancel}
       onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            onCreate(values);
-          })
+        form.validateFields().then((values) => {
+          onCreate(values);
+        });
       }}
     >
       <Form
         form={form}
         {...layout}
         name="materialManager"
-      // initialValues={props.formData}
+        // initialValues={props.formData}
       >
         <Row gutter={24}>
           <Col span={12}>
@@ -214,7 +215,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           </Col>
 
           <Col span={24}>
-            <Form.Item {...layoutSingle} name="Symbol" label="上传文件" valuePropName="fileList" getValueFromEvent={normFile}>
+            <Form.Item
+              {...layoutSingle}
+              name="Symbol"
+              label="上传文件"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+            >
               <Upload
                 listType="picture-card"
                 className="avatar-uploader"
@@ -222,25 +229,33 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
                 beforeUpload={beforeUpload}
                 maxCount={1}
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              // onChange={this.handleChange}
+                // onChange={this.handleChange}
               >
                 {imageUrl ? (
                   <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
                 ) : (
-                    uploadButton
-                  )}
+                  uploadButton
+                )}
               </Upload>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="LiterIds" label="相关文献">
-              <Button onClick={openLiter} type="primary" loading={loading && loading.models.materialManager}>查看/添加</Button>
+              <Button
+                onClick={openLiter}
+                type="primary"
+                loading={loading && loading.models.materialManager}
+              >
+                查看/添加
+              </Button>
             </Form.Item>
           </Col>
 
           <Col span={12}>
             <Form.Item name="Examples" label="应用实例">
-              <Button onClick={openCase} type="primary">查看/添加</Button>
+              <Button onClick={openCase} type="primary">
+                查看/添加
+              </Button>
             </Form.Item>
           </Col>
         </Row>
@@ -249,38 +264,54 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       {/* 相关文献 */}
       <Modal
         confirmLoading={loading && loading.models.materialManager}
-        visible={literVisible} centered width={1200} height={500} okText="确定" cancelText="取消" title={"相关文献"} onOk={literOk} onCancel={() => setLiterVisible(false)} >
+        visible={literVisible}
+        centered
+        width={1200}
+        height={500}
+        okText="确定"
+        cancelText="取消"
+        title={'相关文献'}
+        onOk={literOk}
+        onCancel={() => setLiterVisible(false)}
+      >
         <Table
           columns={literColumns}
           dataSource={props.literData}
           rowKey="LiterId"
           pagination={false}
           rowSelection={{
-            type: "checkbox",
+            type: 'checkbox',
             selectedRowKeys: literKeys,
             onChange: (selectedRowKeys, selectedRows) => {
               console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
               dispatch({
-                type: "materialManager/setState",
-                params: { literKeys: selectedRowKeys, literRows: selectedRows }
-              })
+                type: 'materialManager/setState',
+                params: { literKeys: selectedRowKeys, literRows: selectedRows },
+              });
             },
           }}
-
         />
       </Modal>
 
       {/* 应用实例 */}
       <Modal
         confirmLoading={loading && loading.models.materialManager}
-        visible={caseVisible} centered width={1200} okText="确定" cancelText="取消" title={"应用实例"} onOk={caseOk} onCancel={() => setCaseVisible(false)} >
+        visible={caseVisible}
+        centered
+        width={1200}
+        okText="确定"
+        cancelText="取消"
+        title={'应用实例'}
+        onOk={caseOk}
+        onCancel={() => setCaseVisible(false)}
+      >
         <BraftEditor
+          controls
           value={editorState}
           onChange={handleEditorChange}
           onSave={submitContent}
         />
       </Modal>
-
     </Modal>
   );
 };

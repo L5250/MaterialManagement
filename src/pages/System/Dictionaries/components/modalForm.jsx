@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'umi';
-import {
-  Modal,
-  Form,
-  Input, Switch
-} from 'antd';
+import { Modal, Form, Input, Switch } from 'antd';
 
 const layout = {
   labelCol: { span: 8 },
@@ -14,7 +10,7 @@ const layout = {
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
-  const { loading } = props
+  const { loading } = props;
   useEffect(() => {
     props.dispatch({
       type: 'dictionaries/setState',
@@ -33,11 +29,9 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       cancelText="取消"
       onCancel={onCancel}
       onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            onCreate(values);
-          })
+        form.validateFields().then((values) => {
+          onCreate(values);
+        });
       }}
     >
       <Form
@@ -71,7 +65,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         >
           <Input placeholder="请输入字典分类项编码！" maxLength={100} />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="ListOrder"
           label="排序"
           rules={[
@@ -82,14 +76,15 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           ]}
         >
           <Input placeholder="请输入顺序号！" maxLength={10} />
+        </Form.Item> */}
+        <Form.Item name="Remark" label="备注">
+          <Input.TextArea
+            placeholder="备注"
+            autoSize={{ minRows: 2, maxRows: 6 }}
+            maxLength={500}
+          />
         </Form.Item>
-        <Form.Item
-          name="Remark"
-          label="备注"
-        >
-          <Input.TextArea placeholder="备注" autoSize={{ minRows: 2, maxRows: 6 }} maxLength={500} />
-        </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="IsModify"
           label="是否允许修改"
           valuePropName="checked"
@@ -102,7 +97,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           valuePropName="checked"
         >
           <Switch />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );

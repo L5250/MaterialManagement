@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'umi';
-import {
-  Modal,
-  Form,
-  Input,
-  Select, Switch
-} from 'antd';
+import { Modal, Form, Input, Select, Switch } from 'antd';
 
 const layout = {
   labelCol: { span: 8 },
@@ -16,16 +11,15 @@ const { Option } = Select;
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
-  const { dicSortsData } = props
+  const { dicSortsData } = props;
 
-  const { loading } = props
+  const { loading } = props;
   useEffect(() => {
     props.dispatch({
       type: 'dictionaries/setState',
       params: { formDicItemRef: form },
     });
   }, []);
-
 
   return (
     <Modal
@@ -65,12 +59,18 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
-          <Select placeholder='请选择字典分类！'>
-            {
-              dicSortsData.map(item => {
-                return <Option key={item.DictSortId} value={item.DictSortId}>{item.DictSortName}</Option>
-              })
-            }
+          <Select placeholder="请选择字典分类！">
+            {dicSortsData.map((item) => {
+              return (
+                <Option
+                  key={item.DictSortId}
+                  value={item.DictSortId}
+                  disabled={item.IsModify === 0}
+                >
+                  {item.DictSortName}
+                </Option>
+              );
+            })}
           </Select>
         </Form.Item>
         <Form.Item
@@ -110,11 +110,12 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         >
           <Input placeholder="请输入顺序号！" maxLength={10} />
         </Form.Item>
-        <Form.Item
-          name="Remark"
-          label="备注"
-        >
-          <Input.TextArea placeholder="备注" autoSize={{ minRows: 2, maxRows: 6 }} maxLength={500} />
+        <Form.Item name="Remark" label="备注">
+          <Input.TextArea
+            placeholder="备注"
+            autoSize={{ minRows: 2, maxRows: 6 }}
+            maxLength={500}
+          />
         </Form.Item>
         {/* <Form.Item
           name="IsModify"

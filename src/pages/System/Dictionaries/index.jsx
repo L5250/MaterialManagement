@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  Table,
-  Space,
-  Row,
-  Col,
-  Layout,
-  Button,
-  Modal,
-  Input,
-} from 'antd';
+import { Table, Space, Row, Col, Layout, Button, Modal, Input } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
 import ModalFormDicItem from './components/modalFormItem';
@@ -18,19 +9,18 @@ const { Search } = Input;
 const { Header, Content } = Layout;
 
 const Dictionaries = (props) => {
-
   const [visible, setVisible] = useState(false);
   const [visibleItem, setVisibleItem] = useState(false);
 
-  const { dispatch, rowData, rowItemData, loading, formDicItemRef } = props
+  const { dispatch, rowData, rowItemData, loading, formDicItemRef } = props;
 
   // 获取字典分类
   const getDictSorts = (params = { year: 0, keyWords: '' }) => {
     dispatch({
-      type: "dictionaries/getDictSorts",
-      params: { keyWords: params.keyWords ?? props.keyWords }
-    })
-  }
+      type: 'dictionaries/getDictSorts',
+      params: { keyWords: params.keyWords ?? props.keyWords },
+    });
+  };
 
   const onCreate = (values) => {
     dispatch({
@@ -38,22 +28,22 @@ const Dictionaries = (props) => {
       params: {
         formData: {
           ...values,
-          IsModify: values.IsModify ? 1 : 0,
+          // IsModify: values.IsModify ? 1 : 0,
           // IsEnable: values.IsEnable ? 1 : 0,
-          IsEnable: 1,
+          // IsEnable: 1,
           DictSortId: rowData.DictSortId || '',
-        }
+        },
       },
-    }).then(res => {
+    }).then((res) => {
       if (res.State) {
         setVisible(false);
-        getDictSorts()
+        getDictSorts();
         dispatch({
-          type: "dictionaries/setState",
-          params: { dicItemData: [] }
-        })
+          type: 'dictionaries/setState',
+          params: { dicItemData: [] },
+        });
       }
-    })
+    });
   };
   const addSorts = () => {
     props.formRef.resetFields();
@@ -68,7 +58,7 @@ const Dictionaries = (props) => {
   };
 
   const editSorts = (e, record) => {
-    e.stopPropagation()
+    e.stopPropagation();
     props.formRef.setFieldsValue({ ...record });
     props.dispatch({
       type: 'dictionaries/setState',
@@ -80,50 +70,49 @@ const Dictionaries = (props) => {
     setVisible(true);
   };
   const deleteSorts = (e, record) => {
-    e.stopPropagation()
+    e.stopPropagation();
     Modal.confirm({
       title: '提示',
       content: '确认删除字典分类？',
       onOk: () => {
-        props.dispatch({
-          type: 'dictionaries/deleteDictSort',
-          params: {
-            keyId: record.DictSortId,
-          },
-        }).then(res => {
-          if (res.State) {
-            getDictSorts();
-            dispatch({
-              type: "dictionaries/setState",
-              params: { dicItemData: [] }
-            })
-          }
-        });
+        props
+          .dispatch({
+            type: 'dictionaries/deleteDictSort',
+            params: {
+              keyId: record.DictSortId,
+            },
+          })
+          .then((res) => {
+            if (res.State) {
+              getDictSorts();
+              dispatch({
+                type: 'dictionaries/setState',
+                params: { dicItemData: [] },
+              });
+            }
+          });
       },
     });
   };
   const onSearch = (value) => {
     dispatch({
       type: 'dictionaries/setState',
-    })
-
+    });
   };
 
   // 字典项
   const getDicItemData = (record) => {
     dispatch({
-      type: "dictionaries/setState",
-      params: { rowData: record }
-    })
+      type: 'dictionaries/setState',
+      params: { rowData: record },
+    });
     dispatch({
-      type: "dictionaries/getDictItems",
+      type: 'dictionaries/getDictItems',
       params: {
-        keyId: record.DictSortId
-      }
-    }).then(res => {
-
-    })
-  }
+        keyId: record.DictSortId,
+      },
+    }).then((res) => {});
+  };
   const onCreateItem = (values) => {
     dispatch({
       type: 'dictionaries/saveDictItem',
@@ -135,14 +124,14 @@ const Dictionaries = (props) => {
           IsEnable: 1,
           DictItemId: rowItemData.DictItemId || '',
           LevelCode: 1,
-        }
+        },
       },
-    }).then(res => {
+    }).then((res) => {
       if (res.State) {
         setVisibleItem(false);
-        getDicItemData(rowData)
+        getDicItemData(rowData);
       }
-    })
+    });
   };
   const addItem = () => {
     formDicItemRef.resetFields();
@@ -172,25 +161,25 @@ const Dictionaries = (props) => {
       title: '提示',
       content: '确认删除字典项？',
       onOk: () => {
-        props.dispatch({
-          type: 'dictionaries/deleteDictItem',
-          params: {
-            keyId: record.DictItemId,
-          },
-        }).then(res => {
-          if (res.State) {
-            getDicItemData(rowData);
-          }
-        });
+        props
+          .dispatch({
+            type: 'dictionaries/deleteDictItem',
+            params: {
+              keyId: record.DictItemId,
+            },
+          })
+          .then((res) => {
+            if (res.State) {
+              getDicItemData(rowData);
+            }
+          });
       },
     });
   };
-  const onSearchItem = (value) => {
-
-  };
+  const onSearchItem = (value) => {};
   useEffect(() => {
-    getDictSorts()
-  }, [])
+    getDictSorts();
+  }, []);
   console.log(loading);
   // 表格列
   const columns = [
@@ -200,8 +189,8 @@ const Dictionaries = (props) => {
       dataIndex: '',
       width: 120,
       render: (text, record, index) => {
-        return index + 1
-      }
+        return index + 1;
+      },
     },
     {
       title: '顺序码',
@@ -214,8 +203,12 @@ const Dictionaries = (props) => {
       align: 'center',
       dataIndex: 'DictSortName',
       render: (text, record) => {
-        return <div onClick={() => getDicItemData(record)}><a >{text}</a></div>
-      }
+        return (
+          <div onClick={() => getDicItemData(record)}>
+            <a>{text}</a>
+          </div>
+        );
+      },
     },
     {
       title: '分类项编码',
@@ -231,12 +224,16 @@ const Dictionaries = (props) => {
       title: '操作',
       align: 'center',
       dataIndex: '',
-      fixed: "right",
+      fixed: 'right',
       width: 200,
       render: (record) => (
         <Space size="middle">
-          <a onClick={(e) => editSorts(e, record)}>编辑</a >
-          <a disabled={record.IsModify === 0} onClick={(e) => deleteSorts(e, record)}>删除</a>
+          <a disabled={record.IsModify === 0} onClick={(e) => editSorts(e, record)}>
+            编辑
+          </a>
+          <a disabled={record.IsModify === 0} onClick={(e) => deleteSorts(e, record)}>
+            删除
+          </a>
         </Space>
       ),
     },
@@ -268,24 +265,27 @@ const Dictionaries = (props) => {
       title: '操作',
       align: 'center',
       dataIndex: '',
-      fixed: "right",
+      fixed: 'right',
       width: 200,
       render: (record) => (
         <Space size="middle">
-          <a disabled={rowData.IsModify === 0} onClick={() => editItem(record)}>编辑</a>
-          <a disabled={rowData.IsModify === 0} onClick={() => deleteItem(record)}>删除</a>
+          <a disabled={rowData.IsModify === 0} onClick={() => editItem(record)}>
+            编辑
+          </a>
+          <a disabled={rowData.IsModify === 0} onClick={() => deleteItem(record)}>
+            删除
+          </a>
         </Space>
       ),
     },
-
-  ]
+  ];
 
   return (
     <PageContainer>
       <Layout>
         <Layout>
           <Header style={{ marginBottom: 10 }}>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
+            <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Search
                 placeholder={'输入字典分类查询'}
                 allowClear
@@ -293,7 +293,9 @@ const Dictionaries = (props) => {
                 style={{ width: 300 }}
                 onSearch={onSearch}
               />
-              <Button style={{ textAlign: "right" }} onClick={addSorts} key="2" type="primary">新增</Button>
+              <Button style={{ textAlign: 'right' }} onClick={addSorts} key="2" type="primary">
+                新增
+              </Button>
             </Space>
           </Header>
           <Content>
@@ -304,10 +306,12 @@ const Dictionaries = (props) => {
               rowKey="DictSortId"
               pagination={false}
               scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
-              onRow={record => {
+              onRow={(record) => {
                 return {
-                  onClick: () => { getDicItemData(record) }
-                }
+                  onClick: () => {
+                    getDicItemData(record);
+                  },
+                };
               }}
             />
           </Content>
@@ -315,7 +319,7 @@ const Dictionaries = (props) => {
 
         <Layout style={{ marginTop: 10 }}>
           <Header style={{ marginBottom: 10 }}>
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
+            <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Search
                 placeholder={'输入字典名称查询'}
                 allowClear
@@ -323,7 +327,9 @@ const Dictionaries = (props) => {
                 style={{ width: 300 }}
                 onSearch={onSearchItem}
               />
-              <Button style={{ textAlign: "right" }} onClick={addItem} key="2" type="primary">新增</Button>
+              <Button style={{ textAlign: 'right' }} onClick={addItem} key="2" type="primary">
+                新增
+              </Button>
             </Space>
           </Header>
           <Content>
@@ -334,7 +340,6 @@ const Dictionaries = (props) => {
               rowKey="DictItemId"
               pagination={false}
               scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
-
             />
           </Content>
         </Layout>
@@ -354,7 +359,6 @@ const Dictionaries = (props) => {
         }}
       />
     </PageContainer>
-
   );
 };
 export default connect(({ dictionaries, loading }) => ({ ...dictionaries, loading }))(Dictionaries);
