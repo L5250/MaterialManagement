@@ -43,12 +43,12 @@ export default [
                 path: '/Materia',
                 icon: 'table',
                 routes: [
-                  {
-                    name: '材料录入',
-                    path: '/Materia/MaterialEnter',
-                    component: './Material/MaterialEnter',
-                    authority: ['admin'],
-                  },
+                  // {
+                  //   name: '材料录入',
+                  //   path: '/Materia/MaterialEnter',
+                  //   component: './Material/MaterialEnter',
+                  //   authority: ['admin'],
+                  // },
                   {
                     name: '材料管理',
                     path: '/Materia/MaterialManager',

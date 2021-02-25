@@ -20,16 +20,35 @@ import {
 } from 'antd';
 import { connect } from 'umi';
 import ProCard from '@ant-design/pro-card';
-import {} from '@ant-design/icons';
+import { } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 
 const { Search } = Input;
 
 const Personnel = (props) => {
   const [visible, setVisible] = useState(false);
+
+  const { dispatch, rowData, loading } = props
+
+  const getAllUsers = () => {
+    dispatch({
+      type: "personnel/getAllUsers"
+    }).then(res => {
+      console.log(res);
+    })
+  }
   const onCreate = (values) => {
-    console.log('Received values of form: ', values);
-    setVisible(false);
+    dispatch({
+      type: "personnel/saveUserInfo",
+      params: {
+        formData: { ...values, UserId: rowData.UserId || "", IsAdmin: values.IsAdmin ? 1 : 0, IsValid: values.IsValid ? 1 : 0 }
+      }
+    }).then(res => {
+      if (res.State) {
+        setVisible(false);
+        getAllUsers();
+      }
+    })
   };
   const add = () => {
     props.formRef.resetFields();
@@ -44,6 +63,7 @@ const Personnel = (props) => {
   };
 
   const edit = (record) => {
+    console.log(record);
     props.formRef.setFieldsValue({ ...record });
     props.dispatch({
       type: 'personnel/setState',
@@ -54,29 +74,51 @@ const Personnel = (props) => {
     });
     setVisible(true);
   };
-  const deleteItem = () => {
+  const deleteItem = (record) => {
+    if (record.UserCode === "admin") {
+      Modal.info({
+        title: "提示",
+        content: "管理员不可删除！"
+      })
+      return
+    }
     Modal.confirm({
       title: '提示',
-      content: '确认删除自愈材料？',
+      content: '确认删除用户？',
       onOk: () => {
-        console.log('ok');
+        dispatch({
+          type: "personnel/deleteUserInfo",
+          params: { keyId: record.UserId }
+        }).then(res => {
+          if (res.State) {
+            message.success("删除成功！")
+            getAllUsers()
+          }
+        })
       },
     });
   };
-  const resetPassword = () => {
-    console.log('resetPsw');
+  const resetPassword = (record) => {
+    dispatch({
+      type: "personnel/saveUserInfo",
+      params: {
+        formData: { ...record, PassWord: "" }
+      }
+    }).then(res => {
+      if (res.State) {
+        getAllUsers();
+      }
+    })
   };
 
   const onSearch = (value) => {
-    console.log(value);
-    props
-      .dispatch({
-        type: 'personnel/text',
-      })
-      .then((res) => {
-        console.log(res);
-      });
+
   };
+
+
+  useEffect(() => {
+    getAllUsers()
+  }, [])
 
   // 表格列
   const columns = [
@@ -92,35 +134,38 @@ const Personnel = (props) => {
     {
       title: '用户名',
       align: 'center',
-      dataIndex: 'a',
+      dataIndex: 'UserCode',
     },
     {
       title: '姓名',
       align: 'center',
-      dataIndex: 'b',
+      dataIndex: 'UserName',
     },
     {
       title: '联系电话',
       align: 'center',
-      dataIndex: 'v',
+      dataIndex: 'UserTel',
     },
     {
       title: '是否管理员',
       align: 'center',
-      dataIndex: 'c',
+      dataIndex: 'IsAdmin',
+      render: (text) => {
+        return text === 1 ? "是" : "否"
+      }
     },
     {
       title: '操作',
       align: 'center',
       dataIndex: '',
       width: 200,
-      render: (record) => (
+      render: record => (
         <Space size="middle">
           {/* <Button title="编辑" icon={<EditOutlined />} type="primary" />
           <Button title="删除" icon={<DeleteOutlined />} type="danger" /> */}
           <a onClick={() => edit(record)}>编辑</a>
           <a onClick={() => resetPassword(record)}>重置密码</a>
-          <a onClick={() => deleteItem(record)}>删除</a>
+          <a disabled={record.UserCode === 'admin'} onClick={() => deleteItem(record)}>删除</a>
         </Space>
       ),
     },
@@ -146,10 +191,12 @@ const Personnel = (props) => {
       }}
     >
       <Table
+        loading={loading && loading.models.personnel}
         columns={columns}
         dataSource={props.data}
-        rowKey="name"
+        rowKey="UserId"
         scroll={{ y: 'calc(100vh - 320px)' }}
+        pagination={false}
       />
       <ModalForm
         visible={visible}

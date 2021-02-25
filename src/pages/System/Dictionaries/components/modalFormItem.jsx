@@ -98,7 +98,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           <Input placeholder="请输入字典项编码！" maxLength={100} />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="ListOrder"
           label="排序"
           rules={[
@@ -109,7 +109,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           ]}
         >
           <Input placeholder="请输入顺序号！" maxLength={10} />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item name="Remark" label="备注">
           <Input.TextArea
             placeholder="备注"

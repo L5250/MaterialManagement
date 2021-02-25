@@ -3,30 +3,37 @@ import service from './service';
 export default {
   namespace: 'personnel',
   state: {
-    data: [{ name: 1 }],
+    data: [],
     formRef: {},
     rowData: {},
     title: '',
   },
   effects: {
-    *getData({ params }, { call, put }) {
-      const response = yield call(service.getData(params));
+    *getAllUsers({ params }, { call, put }) {
+      const { Data, State } = yield call(service.getAllUsers, params);
       yield put({
-        type: 'setData',
+        type: 'setState',
+        params: { data: Data },
+      });
+      return { Data, State }
+    },
+    *deleteUserInfo({ params }, { call, put }) {
+      const { Data, State } = yield call(service.deleteUserInfo, params);
+      yield put({
+        type: 'setState',
         params,
       });
+      return { Data, State }
     },
-    //
-    *text({ params }, { call, put }) {
-      console.log(1111);
-      const response = yield call(service.text, params);
-      console.log(response);
+    *saveUserInfo({ params }, { call, put }) {
+      const { Data, State } = yield call(service.saveUserInfo, params);
       yield put({
-        type: 'setData',
+        type: 'setState',
         params,
       });
-      return response;
+      return { Data, State }
     },
+
   },
   reducers: {
     setState: (state, { params }) => {

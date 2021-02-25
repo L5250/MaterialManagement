@@ -159,7 +159,7 @@ const DocumentManagement = (props) => {
 
           <Table
             loading={loading && loading.models.document}
-            style={{ height: "100%" }}
+            // style={{ height: "100%" }}
             columns={columns}
             dataSource={props.data}
             rowKey="LiterId"

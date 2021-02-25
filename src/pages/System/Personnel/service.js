@@ -6,12 +6,14 @@ import request from '@/utils/request';
 //     data: params,
 //   });
 // }
-async function getData(mobile) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+async function getAllUsers(params) {
+  return request(`/api/ActionApi/UserInfo/GetAllUsers`, { params });
 }
-async function text(param = {}) {
-  console.log(222);
-  return request('/api/users', { params: param });
+async function deleteUserInfo(params) {
+  return request(`/api/ActionApi/UserInfo/DeleteUserInfo`, { params });
+}
+async function saveUserInfo(params) {
+  return request(`/api/ActionApi/UserInfo/SaveUserInfo`, { method: "POST", data: params });
 }
 
-export default { getData, text };
+export default { getAllUsers, deleteUserInfo, saveUserInfo };

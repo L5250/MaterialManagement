@@ -3,12 +3,14 @@ import service from './service';
 export default {
   namespace: 'dictionaries',
   state: {
+    dicSortsSourceData: [],// 字典分类列表
     dicSortsData: [],// 字典分类列表
+    dicItemSourceData: [],// 字典项列表
     dicItemData: [],// 字典项列表
     formRef: {},
     formDicItemRef: {},
     rowData: {},
-    rowItemData:{},
+    rowItemData: {},
     title: '',
   },
   effects: {
@@ -17,7 +19,7 @@ export default {
       const { Data, State } = yield call(service.getDictSorts, params);
       yield put({
         type: 'setState',
-        params: { dicSortsData: Data },
+        params: { dicSortsData: Data, dicSortsSourceData: Data },
       });
       return { Data, State }
     },
@@ -41,7 +43,7 @@ export default {
       const { Data, State } = yield call(service.getDictItems, params);
       yield put({
         type: 'setState',
-        params: { dicItemData: Data },
+        params: { dicItemData: Data, dicItemSourceData: Data },
       });
       return { Data, State }
     },
@@ -67,6 +69,7 @@ export default {
   },
   reducers: {
     setState: (state, { params }) => {
+      console.log(params)
       return { ...state, ...params };
     },
   },

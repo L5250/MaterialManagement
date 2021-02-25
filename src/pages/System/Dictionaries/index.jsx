@@ -12,7 +12,7 @@ const Dictionaries = (props) => {
   const [visible, setVisible] = useState(false);
   const [visibleItem, setVisibleItem] = useState(false);
 
-  const { dispatch, rowData, rowItemData, loading, formDicItemRef } = props;
+  const { dispatch, rowData, rowItemData, loading, formDicItemRef, dicSortsSourceData, dicSortsData, dicItemData, dicItemSourceData } = props;
 
   // 获取字典分类
   const getDictSorts = (params = { year: 0, keyWords: '' }) => {
@@ -40,7 +40,7 @@ const Dictionaries = (props) => {
         getDictSorts();
         dispatch({
           type: 'dictionaries/setState',
-          params: { dicItemData: [] },
+          params: { dicItemData: [], dicItemSourceData: [] },
         });
       }
     });
@@ -87,7 +87,7 @@ const Dictionaries = (props) => {
               getDictSorts();
               dispatch({
                 type: 'dictionaries/setState',
-                params: { dicItemData: [] },
+                params: { dicItemData: [], dicItemSourceData: [] },
               });
             }
           });
@@ -95,9 +95,20 @@ const Dictionaries = (props) => {
     });
   };
   const onSearch = (value) => {
-    dispatch({
-      type: 'dictionaries/setState',
-    });
+    const arr = dicSortsSourceData.filter(item => {
+      return item.DictSortName.indexOf(value) !== -1 || item.DictSortCode.indexOf(value) !== -1
+    })
+    if (value === '') {
+      dispatch({
+        type: 'dictionaries/setState',
+        params: { dicSortsData: dicSortsSourceData }
+      });
+    } else {
+      dispatch({
+        type: 'dictionaries/setState',
+        params: { dicSortsData: arr }
+      });
+    }
   };
 
   // 字典项
@@ -111,7 +122,7 @@ const Dictionaries = (props) => {
       params: {
         keyId: record.DictSortId,
       },
-    }).then((res) => {});
+    }).then((res) => { });
   };
   const onCreateItem = (values) => {
     dispatch({
@@ -161,13 +172,12 @@ const Dictionaries = (props) => {
       title: '提示',
       content: '确认删除字典项？',
       onOk: () => {
-        props
-          .dispatch({
-            type: 'dictionaries/deleteDictItem',
-            params: {
-              keyId: record.DictItemId,
-            },
-          })
+        dispatch({
+          type: 'dictionaries/deleteDictItem',
+          params: {
+            keyId: record.DictItemId,
+          },
+        })
           .then((res) => {
             if (res.State) {
               getDicItemData(rowData);
@@ -176,11 +186,26 @@ const Dictionaries = (props) => {
       },
     });
   };
-  const onSearchItem = (value) => {};
+  const onSearchItem = (value) => {
+    const arr = dicItemSourceData.filter(item => {
+      return item.DictItemName.indexOf(value) !== -1 || item.DictItemCode.indexOf(value) !== -1
+    })
+    if (value === '') {
+      dispatch({
+        type: 'dictionaries/setState',
+        params: { dicItemData: dicItemSourceData }
+      });
+    } else {
+      dispatch({
+        type: 'dictionaries/setState',
+        params: { dicItemData: arr }
+      });
+    }
+  };
+
   useEffect(() => {
     getDictSorts();
   }, []);
-  console.log(loading);
   // 表格列
   const columns = [
     {
@@ -231,7 +256,7 @@ const Dictionaries = (props) => {
           <a disabled={record.IsModify === 0} onClick={(e) => editSorts(e, record)}>
             编辑
           </a>
-          <a disabled={record.IsModify === 0} onClick={(e) => deleteSorts(e, record)}>
+          <a onClick={(e) => deleteSorts(e, record)}>
             删除
           </a>
         </Space>
@@ -282,67 +307,65 @@ const Dictionaries = (props) => {
 
   return (
     <PageContainer>
-      <Layout>
-        <Layout>
-          <Header style={{ marginBottom: 10 }}>
-            <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Search
-                placeholder={'输入字典分类查询'}
-                allowClear
-                enterButton
-                style={{ width: 300 }}
-                onSearch={onSearch}
-              />
-              <Button style={{ textAlign: 'right' }} onClick={addSorts} key="2" type="primary">
-                新增
-              </Button>
-            </Space>
-          </Header>
-          <Content>
-            <Table
-              loading={loading && loading.models.dictionaries}
-              columns={columns}
-              dataSource={props.dicSortsData}
-              rowKey="DictSortId"
-              pagination={false}
-              scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
-              onRow={(record) => {
-                return {
-                  onClick: () => {
-                    getDicItemData(record);
-                  },
-                };
-              }}
+      <Layout style={{ height: "50%" }}>
+        <Header style={{ marginBottom: 10 }}>
+          <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Search
+              placeholder={'输入字典分类查询'}
+              allowClear
+              enterButton
+              style={{ width: 300 }}
+              onSearch={onSearch}
             />
-          </Content>
-        </Layout>
+            <Button style={{ textAlign: 'right' }} onClick={addSorts} key="2" type="primary">
+              新增
+              </Button>
+          </Space>
+        </Header>
+        <Content>
+          <Table
+            loading={loading && loading.models.dictionaries}
+            columns={columns}
+            dataSource={props.dicSortsData}
+            rowKey="DictSortId"
+            pagination={false}
+            scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  getDicItemData(record);
+                },
+              };
+            }}
+          />
+        </Content>
+      </Layout>
 
-        <Layout style={{ marginTop: 10 }}>
-          <Header style={{ marginBottom: 10 }}>
-            <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Search
-                placeholder={'输入字典名称查询'}
-                allowClear
-                enterButton
-                style={{ width: 300 }}
-                onSearch={onSearchItem}
-              />
-              <Button style={{ textAlign: 'right' }} onClick={addItem} key="2" type="primary">
-                新增
-              </Button>
-            </Space>
-          </Header>
-          <Content>
-            <Table
-              loading={loading && loading.models.dictionaries}
-              columns={dicItemColumns}
-              dataSource={props.dicItemData}
-              rowKey="DictItemId"
-              pagination={false}
-              scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
+      <Layout style={{ marginTop: 10, height: "50%" }}>
+        <Header style={{ marginBottom: 10 }}>
+          <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Search
+              placeholder={'输入字典名称查询'}
+              allowClear
+              enterButton
+              style={{ width: 300 }}
+              onSearch={onSearchItem}
             />
-          </Content>
-        </Layout>
+            <Button style={{ textAlign: 'right' }} onClick={addItem} key="2" type="primary">
+              新增
+              </Button>
+          </Space>
+        </Header>
+        <Content>
+          <Table
+            loading={loading && loading.models.dictionaries}
+            columns={dicItemColumns}
+            dataSource={props.dicItemData}
+            rowKey="DictItemId"
+            pagination={false}
+            scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
+          />
+        </Content>
       </Layout>
       <ModalForm
         visible={visible}

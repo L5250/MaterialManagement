@@ -10,13 +10,17 @@ async function getData(params) {
   return request(`/api/ActionApi/MaterialManage/GetMaterialRecords`, { params });
 }
 async function saveMaterialRecord(params) {
-  return request(`/api/ActionApi/MaterialManage/SaveMaterialRecord`, { method: 'POST', params });
+  return request(`/api/ActionApi/MaterialManage/SaveMaterialRecord`, { method: 'POST', data: params });
 }
 async function deleteMaterialRecord(params) {
   return request(`/api/ActionApi/MaterialManage/DeleteMaterialRecord`, { params });
+}
+// 查询材料引用的文献信息
+async function getLiterInfo(params) {
+  return request(`/api/ActionApi/MaterialManage/GetLiterInfo`, { params });
 }
 async function getValidLiterInfo(params) {
   return request(`/api/ActionApi/MaterialManage/GetValidLiterInfo`, { params });
 }
 
-export default { getData, saveMaterialRecord, deleteMaterialRecord, getValidLiterInfo };
+export default { getData, saveMaterialRecord, deleteMaterialRecord, getLiterInfo, getValidLiterInfo };

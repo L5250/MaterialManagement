@@ -16,7 +16,7 @@ const { Search } = Input;
 const MaterialManager = (props) => {
   const [visible, setVisible] = useState(false);
 
-  const { dispatch, rowData } = props
+  const { dispatch, rowData, loading, imageUrl64 } = props
 
   // 获取自愈材料列表
   const getData = (params = { isInvalid: true, keyWords: '' }) => {
@@ -29,16 +29,21 @@ const MaterialManager = (props) => {
   const onCreate = (values) => {
     console.log(values);
     // setVisible(false);
+    const formData = {
+      ...values,
+      // IsValid: 1,
+      // IsDelete: 0,
+      Symbol: imageUrl64,
+      MaterialRecordID: rowData.MaterialRecordID || "",
+      // literIds: values.LiterIds || ""
+    }
+    console.log(formData);
+    // return
     dispatch({
-      type: 'dictionaries/saveDictSort',
+      type: 'materialManager/saveMaterialRecord',
       params: {
-        formData: {
-          ...values,
-          IsValid: true,
-          IsDelete:0,
-          MaterialRecordID: rowData.MaterialRecordID || ""
-        },
-        literIds: ''
+        formData,
+        // literIds:formData.LiterIds
       },
     }).then(res => {
       if (res.State) {
@@ -52,7 +57,10 @@ const MaterialManager = (props) => {
     props.dispatch({
       type: 'materialManager/setState',
       params: {
+        literKeys: [],
+        literRows: [],
         rowData: {},
+        imageUrl64: '',
         title: '新增自愈材料',
       },
     });
@@ -66,6 +74,9 @@ const MaterialManager = (props) => {
       type: 'materialManager/setState',
       params: {
         rowData: record,
+        imageUrl64: record.Symbol,
+        literKeys: record.LiterIds ? record.LiterIds.split(',') : "",
+        // literRows: [],
         title: '编辑自愈材料',
       },
     });
@@ -73,11 +84,22 @@ const MaterialManager = (props) => {
   };
 
   // 删除
-  const deleteItem = () => {
+  const deleteItem = (record) => {
     Modal.confirm({
       title: '提示',
       content: '确认删除自愈材料？',
       onOk: () => {
+        dispatch({
+          type: 'materialManager/deleteMaterialRecord',
+          params: {
+            keyId: record.key,
+          },
+        })
+          .then((res) => {
+            if (res.State) {
+              getData();
+            }
+          });
       },
     });
   };
@@ -173,6 +195,7 @@ const MaterialManager = (props) => {
       }}
     >
       <Table
+        loading={loading && loading.models.materialManager}
         columns={columns}
         dataSource={props.data}
         rowKey="key"
