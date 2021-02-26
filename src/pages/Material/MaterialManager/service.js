@@ -10,7 +10,10 @@ async function getData(params) {
   return request(`/api/ActionApi/MaterialManage/GetMaterialRecords`, { params });
 }
 async function saveMaterialRecord(params) {
-  return request(`/api/ActionApi/MaterialManage/SaveMaterialRecord`, { method: 'POST', data: params });
+  return request(`/api/ActionApi/MaterialManage/SaveMaterialRecord`, {
+    method: 'POST',
+    data: params,
+  });
 }
 async function deleteMaterialRecord(params) {
   return request(`/api/ActionApi/MaterialManage/DeleteMaterialRecord`, { params });
@@ -22,5 +25,16 @@ async function getLiterInfo(params) {
 async function getValidLiterInfo(params) {
   return request(`/api/ActionApi/MaterialManage/GetValidLiterInfo`, { params });
 }
+// 获取应用场景和自愈类型列表
+async function getSceneAndTypeList(params) {
+  return request(`/api/ActionApi/MaterialManage/GetSceneAndTypeList`, { params });
+}
 
-export default { getData, saveMaterialRecord, deleteMaterialRecord, getLiterInfo, getValidLiterInfo };
+export default {
+  getData,
+  saveMaterialRecord,
+  deleteMaterialRecord,
+  getLiterInfo,
+  getValidLiterInfo,
+  getSceneAndTypeList,
+};

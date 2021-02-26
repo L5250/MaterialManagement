@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  Table,
-  Space,
-  Button,
-  Modal,
-  Input,
-  Checkbox
-} from 'antd';
+import { Table, Space, Button, Modal, Input, Checkbox } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
+import CheckMaterial from '@/components/CheckMaterial';
 
 const { Search } = Input;
 
 const MaterialManager = (props) => {
   const [visible, setVisible] = useState(false);
+  const [checkVisible, setCheckVisible] = useState(false);
 
-  const { dispatch, rowData, loading, imageUrl64 } = props
+  const { dispatch, rowData, loading, imageUrl64 } = props;
 
   // 获取自愈材料列表
   const getData = (params = { isInvalid: true, keyWords: '' }) => {
     dispatch({
-      type: "materialManager/getData",
-      params: { isInvalid: params.isInvalid || props.isInvalid, keyWords: params.keyWords ?? props.keyWords }
-    })
+      type: 'materialManager/getData',
+      params: {
+        isInvalid: params.isInvalid || props.isInvalid,
+        keyWords: params.keyWords ?? props.keyWords,
+      },
+    });
+  };
+
+  // 获取应用场景和自愈类型列表
+  const getSceneAndTypeList = () => {
+    dispatch({
+      type: 'materialManager/getSceneAndTypeList',
+    });
   };
 
   const onCreate = (values) => {
@@ -34,24 +39,25 @@ const MaterialManager = (props) => {
       // IsValid: 1,
       // IsDelete: 0,
       Symbol: imageUrl64,
-      MaterialRecordID: rowData.MaterialRecordID || "",
-      // literIds: values.LiterIds || ""
-    }
+      MaterialRecordID: rowData.MaterialRecordID || '',
+      MaterialType: values.MaterialType?.toString(),
+    };
     console.log(formData);
     // return
     dispatch({
       type: 'materialManager/saveMaterialRecord',
       params: {
         formData,
-        // literIds:formData.LiterIds
       },
-    }).then(res => {
+    }).then((res) => {
       if (res.State) {
         setVisible(false);
-        getData()
+        getData();
       }
-    })
+    });
   };
+
+  // 新增
   const add = () => {
     props.formRef.resetFields();
     props.dispatch({
@@ -67,22 +73,35 @@ const MaterialManager = (props) => {
     setVisible(true);
   };
 
-  // 编辑
-  const edit = (record) => {
-    props.formRef.setFieldsValue({ ...record });
+  // 查看
+  const check = (record) => {
     props.dispatch({
       type: 'materialManager/setState',
       params: {
-        rowData: record,
+        rowData: { ...record },
+      },
+    });
+    setCheckVisible(true);
+  };
+  // 编辑
+  const edit = (record) => {
+    props.formRef.setFieldsValue({
+      ...record,
+      SceneName: record.SceneName ? record.SceneName.join() : [],
+      MaterialType: record.MaterialType ? record.MaterialType.join() : [],
+    });
+    props.dispatch({
+      type: 'materialManager/setState',
+      params: {
+        rowData: { ...record },
         imageUrl64: record.Symbol,
-        literKeys: record.LiterIds ? record.LiterIds.split(',') : "",
+        literKeys: record.LiterIds ? record.LiterIds.split(',') : '',
         // literRows: [],
         title: '编辑自愈材料',
       },
     });
     setVisible(true);
   };
-
   // 删除
   const deleteItem = (record) => {
     Modal.confirm({
@@ -94,12 +113,11 @@ const MaterialManager = (props) => {
           params: {
             keyId: record.key,
           },
-        })
-          .then((res) => {
-            if (res.State) {
-              getData();
-            }
-          });
+        }).then((res) => {
+          if (res.State) {
+            getData();
+          }
+        });
       },
     });
   };
@@ -108,24 +126,24 @@ const MaterialManager = (props) => {
   const onSearch = (value) => {
     dispatch({
       type: 'materialManager/setState',
-      params: { keyWords: value }
-    })
-    getData({ keyWords: value })
+      params: { keyWords: value },
+    });
+    getData({ keyWords: value });
   };
 
   // 显示禁用的材料
   const invalidChange = (e) => {
     dispatch({
       type: 'materialManager/setState',
-      params: { isInvalid: e.target.checked }
-    })
-    getData({ isInvalid: e.target.checked })
-  }
-
+      params: { isInvalid: e.target.checked },
+    });
+    getData({ isInvalid: e.target.checked });
+  };
 
   useEffect(() => {
-    getData()
-  }, [])
+    getData();
+    getSceneAndTypeList();
+  }, []);
 
   // 表格列
   const columns = [
@@ -168,6 +186,7 @@ const MaterialManager = (props) => {
         <Space size="middle">
           {/* <Button title="编辑" icon={<EditOutlined />} type="primary" />
           <Button title="删除" icon={<DeleteOutlined />} type="danger" /> */}
+          <a onClick={() => check(record)}>查看</a>
           <a onClick={() => edit(record)}>编辑</a>
           <a onClick={() => deleteItem(record)}>删除</a>
         </Space>
@@ -179,7 +198,9 @@ const MaterialManager = (props) => {
     <PageContainer
       header={{
         extra: [
-          <Checkbox key="1" onChange={invalidChange}>显示禁用的材料</Checkbox>,
+          <Checkbox key="1" onChange={invalidChange}>
+            显示禁用的材料
+          </Checkbox>,
           <Search
             key="2"
             placeholder={'输入材料名称或DAS号查询'}
@@ -208,6 +229,12 @@ const MaterialManager = (props) => {
         onCancel={() => {
           setVisible(false);
         }}
+      />
+
+      <CheckMaterial
+        visible={checkVisible}
+        onCancel={() => setCheckVisible(false)}
+        data={rowData}
       />
     </PageContainer>
   );

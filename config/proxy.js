@@ -19,10 +19,10 @@ export default {
   },
   pre: {
     '/api/': {
-      target: '',
+      target: 'http://140.249.217.89:63577',
       changeOrigin: true,
       pathRewrite: {
-        '^': '',
+        '^/api/': '',
       },
     },
   },
