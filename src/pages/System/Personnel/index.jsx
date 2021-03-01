@@ -59,7 +59,7 @@ const Personnel = (props) => {
       type: 'personnel/setState',
       params: {
         rowData: {},
-        title: '新增自愈材料',
+        title: '新增人员',
       },
     });
     setVisible(true);
@@ -71,7 +71,7 @@ const Personnel = (props) => {
       type: 'personnel/setState',
       params: {
         rowData: record,
-        title: '编辑自愈材料',
+        title: '编辑人员',
       },
     });
     setVisible(true);

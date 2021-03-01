@@ -54,7 +54,6 @@ const CheckMaterial = (props) => {
   return (
     <Modal
       visible={visible}
-      centered
       forceRender
       width={760}
       title={'查看材料'}
@@ -106,8 +105,8 @@ const CheckMaterial = (props) => {
           <Image src={dataObj.Symbol} style={{ width: 180 }} />
         </Descriptions.Item>
         <Descriptions.Item label="信号词">{dataObj.SignalWords}</Descriptions.Item>
-        <Descriptions.Item label="自愈方式">{dataObj.TypeName}</Descriptions.Item>
-        <Descriptions.Item label="应用方向">{dataObj.SceneName}</Descriptions.Item>
+        <Descriptions.Item label="自愈类型">{dataObj.TypeName}</Descriptions.Item>
+        {/* <Descriptions.Item label="应用方向">{dataObj.SceneName}</Descriptions.Item> */}
       </Descriptions>
 
       {/* 相关文献 */}

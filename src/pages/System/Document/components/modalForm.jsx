@@ -82,7 +82,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         >
           <TextArea
             placeholder="请输入文献名称"
-            autoSize={{ minRows: 2, maxRows: 6 }}
+            autoSize={{ minRows: 6, maxRows: 10 }}
             maxLength={500}
           />
         </Form.Item>

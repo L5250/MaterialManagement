@@ -143,7 +143,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   return (
     <Modal
       confirmLoading={loading && loading.models.materialManager}
-      centered
       forceRender
       width={760}
       visible={visible}
@@ -209,7 +208,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           </Col>
           <Col span={12}>
             <Form.Item name="Density" label="密度">
-              <InputNumber style={{ width: '100%' }} placeholder="请输入密度" />
+              <Input placeholder="请输入密度" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -284,7 +283,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="Symbol" label="上传文件">
+            <Form.Item name="Symbol" label="上传符号">
               <Space direction="vertical">
                 <Upload
                   showUploadList={false}
