@@ -4,8 +4,10 @@ import { Table, Space, Button, Modal, Input, Checkbox } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
 import CheckMaterial from '@/components/CheckMaterial';
+import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
+const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
 
 const MaterialManager = (props) => {
   const [visible, setVisible] = useState(false);
@@ -32,18 +34,13 @@ const MaterialManager = (props) => {
   };
 
   const onCreate = (values) => {
-    console.log(values);
-    // setVisible(false);
     const formData = {
       ...values,
-      // IsValid: 1,
-      // IsDelete: 0,
       Symbol: imageUrl64,
       MaterialRecordID: rowData.MaterialRecordID || '',
+      ApplicationScene: values.ApplicationScene?.toString(),
       MaterialType: values.MaterialType?.toString(),
     };
-    console.log(formData);
-    // return
     dispatch({
       type: 'materialManager/saveMaterialRecord',
       params: {
@@ -87,8 +84,8 @@ const MaterialManager = (props) => {
   const edit = (record) => {
     props.formRef.setFieldsValue({
       ...record,
-      SceneName: record.SceneName ? record.SceneName.join() : [],
-      MaterialType: record.MaterialType ? record.MaterialType.join() : [],
+      ApplicationScene: record.ApplicationScene ? record.ApplicationScene.split(',') : [],
+      MaterialType: record.MaterialType ? record.MaterialType.split(',') : [],
     });
     props.dispatch({
       type: 'materialManager/setState',
@@ -183,17 +180,43 @@ const MaterialManager = (props) => {
       dataIndex: '',
       width: 200,
       render: (record) => (
-        <Space size="middle">
-          {/* <Button title="编辑" icon={<EditOutlined />} type="primary" />
-          <Button title="删除" icon={<DeleteOutlined />} type="danger" /> */}
-          <a onClick={() => check(record)}>查看</a>
-          <a onClick={() => edit(record)}>编辑</a>
-          <a onClick={() => deleteItem(record)}>删除</a>
+        <Space>
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => check(record)}
+            type="primary"
+            title="查看"
+          />
+          {userInfo.IsAdmin ? (
+            <Space>
+              <Button
+                title="编辑"
+                icon={<EditOutlined />}
+                type="primary"
+                onClick={() => edit(record)}
+              />
+              <Button
+                title="删除"
+                icon={<DeleteOutlined />}
+                type="primary"
+                danger
+                onClick={() => deleteItem(record)}
+              />
+            </Space>
+          ) : null}
+          {/* <a onClick={() => check(record)}>查看</a>
+          {
+            userInfo.IsAdmin ?
+              <Space>
+                <a onClick={() => edit(record)}>编辑</a>
+                <a onClick={() => deleteItem(record)}>删除</a>
+              </Space>
+              : null
+          } */}
         </Space>
       ),
     },
   ];
-
   return (
     <PageContainer
       header={{
@@ -234,7 +257,7 @@ const MaterialManager = (props) => {
       <CheckMaterial
         visible={checkVisible}
         onCancel={() => setCheckVisible(false)}
-        data={rowData}
+        dataObj={rowData || {}}
       />
     </PageContainer>
   );

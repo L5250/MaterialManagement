@@ -14,6 +14,7 @@ import {
   Select,
   Space,
   Image,
+  InputNumber,
 } from 'antd';
 import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import BraftEditor from 'braft-editor';
@@ -23,10 +24,6 @@ const { Option } = Select;
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
-};
-
-const layoutSingle = {
-  labelCol: { span: 4 },
 };
 
 async function getBase64(img, callback) {
@@ -62,13 +59,10 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   const handleChange = (info) => {
     if (info.file.status === 'uploading') {
-      // this.setState({ loading: true });
       return;
     }
     if (info.file.status === 'done') {
-      // Get this url from response in real world.
       getBase64(info.file.originFileObj, (imageUrl) => {
-        // console.log(imageUrl)
         dispatch({
           type: 'materialManager/setState',
           params: {
@@ -83,11 +77,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
   // 打开文献弹框
   const openLiter = (add) => {
-    console.log(form.getFieldValue());
     const LiterIds = form.getFieldValue('LiterIds') || '';
-    // console.log(LiterIds);
-    // const keys = LiterIds.split(',');
-    // console.log(keys);
     dispatch({
       type: 'materialManager/setState',
       params: { isAddLiter: add },
@@ -99,10 +89,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       }).then((res) => {
         if (res.State) {
           setLiterVisible(true);
-          // dispatch({
-          //   type: 'materialManager/setState',
-          //   params: { isAddLiter: add },
-          // });
         }
       });
     } else {
@@ -112,10 +98,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       }).then((res) => {
         if (res.State) {
           setLiterVisible(true);
-          // dispatch({
-          //   type: 'materialManager/setState',
-          //   params: { literKeys: keys },
-          // });
         }
       });
     }
@@ -129,11 +111,8 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   ];
   // 文献弹框确定
   const literOk = () => {
-    console.log(props);
-    console.log(props.literKeys.join());
     form.setFieldsValue({ LiterIds: props.literKeys.join() });
     setLiterVisible(false);
-    console.log(form.getFieldValue());
   };
 
   // 应用实例
@@ -230,12 +209,17 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           </Col>
           <Col span={12}>
             <Form.Item name="Density" label="密度">
-              <Input placeholder="请输入密度" />
+              <InputNumber style={{ width: '100%' }} placeholder="请输入密度" />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="BoilingPoint" label="沸点">
-              <Input placeholder="请输入沸点" />
+              <InputNumber
+                style={{ width: '100%' }}
+                placeholder="请输入沸点"
+                formatter={(value) => `${value}℃`}
+                parser={(value) => value.replace('℃', '')}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -254,12 +238,22 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           </Col>
           <Col span={12}>
             <Form.Item name="MeltingPoint" label="熔点">
-              <Input placeholder="请输入熔点" />
+              <InputNumber
+                style={{ width: '100%' }}
+                placeholder="请输入熔点"
+                formatter={(value) => `${value}℃`}
+                parser={(value) => value.replace('℃', '')}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item name="FlashPoint" label="闪点">
-              <Input placeholder="请输入闪点" />
+              <InputNumber
+                style={{ width: '100%' }}
+                placeholder="请输入闪点"
+                formatter={(value) => `${value}℃`}
+                parser={(value) => value.replace('℃', '')}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -277,7 +271,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="SceneName" label="应用场景">
+            <Form.Item name="ApplicationScene" label="应用场景">
               <Select placeholder="请选择应用场景">
                 {scenes.map((item) => {
                   return (
@@ -343,13 +337,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           <Col span={12}>
             <Form.Item name="Examples" label="应用实例">
               <Space>
-                <Button
+                {/* <Button
                   loading={loading && loading.models.materialManager}
                   onClick={() => openCase(false)}
                   type="primary"
                 >
                   查看
-                </Button>
+                </Button> */}
                 <Button
                   loading={loading && loading.models.materialManager}
                   onClick={() => openCase(true)}

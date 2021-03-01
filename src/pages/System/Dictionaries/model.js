@@ -3,10 +3,10 @@ import service from './service';
 export default {
   namespace: 'dictionaries',
   state: {
-    dicSortsSourceData: [],// 字典分类列表
-    dicSortsData: [],// 字典分类列表
-    dicItemSourceData: [],// 字典项列表
-    dicItemData: [],// 字典项列表
+    dicSortsSourceData: [], // 字典分类列表
+    dicSortsData: [], // 字典分类列表
+    dicItemSourceData: [], // 字典项列表
+    dicItemData: [], // 字典项列表
     formRef: {},
     formDicItemRef: {},
     rowData: {},
@@ -21,7 +21,7 @@ export default {
         type: 'setState',
         params: { dicSortsData: Data, dicSortsSourceData: Data },
       });
-      return { Data, State }
+      return { Data, State };
     },
 
     // 删除字典分类
@@ -31,12 +31,12 @@ export default {
         type: 'setState',
         params,
       });
-      return { Data, State }
+      return { Data, State };
     },
     // 保存字典分类
     *saveDictSort({ params }, { call, put }) {
       const { Data, State } = yield call(service.saveDictSort, params);
-      return { Data, State }
+      return { Data, State };
     },
     // 根据字典分类ID获取字典项列表
     *getDictItems({ params }, { call, put }) {
@@ -45,7 +45,7 @@ export default {
         type: 'setState',
         params: { dicItemData: Data, dicItemSourceData: Data },
       });
-      return { Data, State }
+      return { Data, State };
     },
     // 删除字典项
     *deleteDictItem({ params }, { call, put }) {
@@ -54,7 +54,7 @@ export default {
         type: 'setState',
         params,
       });
-      return { Data, State }
+      return { Data, State };
     },
     // 保存字典项
     *saveDictItem({ params }, { call, put }) {
@@ -63,13 +63,11 @@ export default {
         type: 'setState',
         params,
       });
-      return { Data, State }
+      return { Data, State };
     },
-
   },
   reducers: {
     setState: (state, { params }) => {
-      console.log(params)
       return { ...state, ...params };
     },
   },

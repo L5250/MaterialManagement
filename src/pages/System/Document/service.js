@@ -11,7 +11,6 @@ async function getData(params) {
 }
 
 async function saveLiter(params) {
-  console.log(params)
   return request(`/api/ActionApi/LiterManage/SaveLiterInfo`, { method: 'POST', data: params });
 }
 
@@ -19,4 +18,4 @@ async function deleteLiter(params) {
   return request(`/api/ActionApi/LiterManage/DeleteLiter`, { params });
 }
 
-export default { getData, saveLiter, deleteLiter }
+export default { getData, saveLiter, deleteLiter };

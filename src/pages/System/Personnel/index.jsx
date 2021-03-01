@@ -19,8 +19,7 @@ import {
   Form,
 } from 'antd';
 import { connect } from 'umi';
-import ProCard from '@ant-design/pro-card';
-import { } from '@ant-design/icons';
+import { EditOutlined, RedoOutlined, DeleteOutlined } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
 
 const { Search } = Input;
@@ -28,27 +27,31 @@ const { Search } = Input;
 const Personnel = (props) => {
   const [visible, setVisible] = useState(false);
 
-  const { dispatch, rowData, loading } = props
+  const { dispatch, rowData, loading } = props;
 
   const getAllUsers = () => {
     dispatch({
-      type: "personnel/getAllUsers"
-    }).then(res => {
-      console.log(res);
-    })
-  }
+      type: 'personnel/getAllUsers',
+    });
+  };
   const onCreate = (values) => {
     dispatch({
-      type: "personnel/saveUserInfo",
+      type: 'personnel/saveUserInfo',
       params: {
-        formData: { ...values, UserId: rowData.UserId || "", IsAdmin: values.IsAdmin ? 1 : 0, IsValid: values.IsValid ? 1 : 0 }
-      }
-    }).then(res => {
+        formData: {
+          ...values,
+          UserId: rowData.UserId || '',
+          IsAdmin: values.IsAdmin ? 1 : 0,
+          IsValid: values.IsValid ? 1 : 0,
+        },
+      },
+    }).then((res) => {
       if (res.State) {
         setVisible(false);
         getAllUsers();
+        message.success('保存成功！');
       }
-    })
+    });
   };
   const add = () => {
     props.formRef.resetFields();
@@ -63,7 +66,6 @@ const Personnel = (props) => {
   };
 
   const edit = (record) => {
-    console.log(record);
     props.formRef.setFieldsValue({ ...record });
     props.dispatch({
       type: 'personnel/setState',
@@ -75,50 +77,48 @@ const Personnel = (props) => {
     setVisible(true);
   };
   const deleteItem = (record) => {
-    if (record.UserCode === "admin") {
+    if (record.UserCode === 'admin') {
       Modal.info({
-        title: "提示",
-        content: "管理员不可删除！"
-      })
-      return
+        title: '提示',
+        content: '管理员不可删除！',
+      });
+      return;
     }
     Modal.confirm({
       title: '提示',
       content: '确认删除用户？',
       onOk: () => {
         dispatch({
-          type: "personnel/deleteUserInfo",
-          params: { keyId: record.UserId }
-        }).then(res => {
+          type: 'personnel/deleteUserInfo',
+          params: { keyId: record.UserId },
+        }).then((res) => {
           if (res.State) {
-            message.success("删除成功！")
-            getAllUsers()
+            message.success('删除成功！');
+            getAllUsers();
           }
-        })
+        });
       },
     });
   };
   const resetPassword = (record) => {
     dispatch({
-      type: "personnel/saveUserInfo",
+      type: 'personnel/saveUserInfo',
       params: {
-        formData: { ...record, PassWord: "" }
-      }
-    }).then(res => {
+        formData: { ...record, PassWord: '' },
+      },
+    }).then((res) => {
       if (res.State) {
         getAllUsers();
+        message.success('重置成功！');
       }
-    })
+    });
   };
 
-  const onSearch = (value) => {
-
-  };
-
+  const onSearch = (value) => {};
 
   useEffect(() => {
-    getAllUsers()
-  }, [])
+    getAllUsers();
+  }, []);
 
   // 表格列
   const columns = [
@@ -151,21 +151,44 @@ const Personnel = (props) => {
       align: 'center',
       dataIndex: 'IsAdmin',
       render: (text) => {
-        return text === 1 ? "是" : "否"
-      }
+        return text === 1 ? '是' : '否';
+      },
+    },
+    {
+      title: '是否有效',
+      align: 'center',
+      dataIndex: 'IsValid',
+      render: (text) => {
+        return text === 1 ? '是' : '否';
+      },
     },
     {
       title: '操作',
       align: 'center',
       dataIndex: '',
       width: 200,
-      render: record => (
-        <Space size="middle">
-          {/* <Button title="编辑" icon={<EditOutlined />} type="primary" />
-          <Button title="删除" icon={<DeleteOutlined />} type="danger" /> */}
-          <a onClick={() => edit(record)}>编辑</a>
-          <a onClick={() => resetPassword(record)}>重置密码</a>
-          <a disabled={record.UserCode === 'admin'} onClick={() => deleteItem(record)}>删除</a>
+      render: (record) => (
+        <Space>
+          <Button
+            icon={<EditOutlined />}
+            type="primary"
+            onClick={() => edit(record)}
+            title="编辑"
+          />
+          <Button
+            icon={<RedoOutlined />}
+            type="primary"
+            onClick={() => resetPassword(record)}
+            title="重置密码"
+          />
+          <Button
+            icon={<DeleteOutlined />}
+            type="primary"
+            danger
+            disabled={record.UserCode === 'admin'}
+            onClick={() => deleteItem(record)}
+            title="删除"
+          />
         </Space>
       ),
     },
@@ -175,7 +198,7 @@ const Personnel = (props) => {
     <PageContainer
       header={{
         extra: [
-          <Checkbox key="3">显示禁用的用户</Checkbox>,
+          // <Checkbox key="3">显示禁用的用户</Checkbox>,
           <Search
             key="1"
             placeholder={'输入用户名或用户姓名查询'}

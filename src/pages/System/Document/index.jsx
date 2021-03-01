@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  Table,
-  Space,
-  Layout,
-  Button,
-  Modal,
-  Input,
-  Form,
-} from 'antd';
+import { Table, Space, Layout, Button, Modal, Input, message } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -18,25 +11,28 @@ const { Search } = Input;
 const DocumentManagement = (props) => {
   const [visible, setVisible] = useState(false);
 
-  const { dispatch, rowData, loading } = props
+  const { dispatch, rowData, loading } = props;
 
   // 获取文献
   const getData = (params = { year: 0, keyWords: '' }) => {
     dispatch({
-      type: "document/getData",
-      params: { year: params.year || props.year, keyWords: params.keyWords ?? props.keyWords }
-    })
+      type: 'document/getData',
+      params: { year: params.year || props.year, keyWords: params.keyWords ?? props.keyWords },
+    });
   };
   const onCreate = (values) => {
     dispatch({
-      type: "document/saveLiter",
-      params: { formData: { ...values, IsValid: values.IsValid ? 1 : 0, LiterId: rowData.LiterId || '' } }
-    }).then(res => {
+      type: 'document/saveLiter',
+      params: {
+        formData: { ...values, IsValid: values.IsValid ? 1 : 0, LiterId: rowData.LiterId || '' },
+      },
+    }).then((res) => {
       if (res.State) {
         setVisible(false);
-        getData()
+        getData();
+        message.success('保存成功！');
       }
-    })
+    });
   };
   const add = () => {
     props.formRef.resetFields();
@@ -69,13 +65,14 @@ const DocumentManagement = (props) => {
       content: '确认删除自愈材料？',
       onOk: () => {
         dispatch({
-          type: "document/deleteLiter",
-          params: { id: record.LiterId }
-        }).then(res => {
+          type: 'document/deleteLiter',
+          params: { id: record.LiterId },
+        }).then((res) => {
           if (res.State) {
-            getData()
+            getData();
+            message.success('删除成功！');
           }
-        })
+        });
       },
     });
   };
@@ -84,14 +81,14 @@ const DocumentManagement = (props) => {
   const onSearch = (value) => {
     dispatch({
       type: 'document/setState',
-      params: { keyWords: value }
-    })
-    getData({ keyWords: value })
+      params: { keyWords: value },
+    });
+    getData({ keyWords: value });
   };
 
   useEffect(() => {
-    getData()
-  }, [])
+    getData();
+  }, []);
 
   // 表格列
   const columns = [
@@ -122,15 +119,34 @@ const DocumentManagement = (props) => {
       align: 'center',
     },
     {
+      title: '是否有效',
+      align: 'center',
+      dataIndex: 'IsValid',
+      render: (text) => {
+        return text === 1 ? '是' : '否';
+      },
+    },
+    {
       title: '操作',
       dataIndex: '',
       align: 'center',
       width: 200,
-      fixed: "right",
+      fixed: 'right',
       render: (record) => (
-        <Space size="middle">
-          <a onClick={() => edit(record)}>编辑</a>
-          <a onClick={() => deleteItem(record)}>删除</a>
+        <Space>
+          <Button
+            icon={<EditOutlined />}
+            type="primary"
+            title="编辑"
+            onClick={() => edit(record)}
+          />
+          <Button
+            icon={<DeleteOutlined />}
+            type="primary"
+            title="删除"
+            danger
+            onClick={() => deleteItem(record)}
+          />
         </Space>
       ),
     },
@@ -156,7 +172,6 @@ const DocumentManagement = (props) => {
     >
       <Layout>
         <Content>
-
           <Table
             loading={loading && loading.models.document}
             // style={{ height: "100%" }}

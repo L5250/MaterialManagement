@@ -5,7 +5,7 @@ import { history, connect } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
-const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
 class AvatarDropdown extends React.Component {
   onMenuClick = (event) => {
     const { key } = event;
@@ -58,21 +58,27 @@ class AvatarDropdown extends React.Component {
     return userInfo && userInfo.UserName ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={userInfo.avatar} icon={<UserOutlined />} alt="avatar" />
+          <Avatar
+            size="small"
+            className={styles.avatar}
+            src={userInfo.avatar}
+            icon={<UserOutlined />}
+            alt="avatar"
+          />
           <span className={`${styles.name} anticon`}>{userInfo.UserName}</span>
         </span>
       </HeaderDropdown>
     ) : (
-        <span className={`${styles.action} ${styles.account}`}>
-          <Spin
-            size="small"
-            style={{
-              marginLeft: 8,
-              marginRight: 8,
-            }}
-          />
-        </span>
-      );
+      <span className={`${styles.action} ${styles.account}`}>
+        <Spin
+          size="small"
+          style={{
+            marginLeft: 8,
+            marginRight: 8,
+          }}
+        />
+      </span>
+    );
   }
 }
 

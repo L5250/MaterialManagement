@@ -25,6 +25,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     <Modal
       confirmLoading={loading && loading.models.dictionaries}
       forceRender
+      centered
       width={460}
       visible={visible}
       title={props.title}
@@ -32,15 +33,9 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       cancelText="取消"
       onCancel={onCancel}
       onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            // form.resetFields();
-            onCreate(values);
-          })
-          .catch((info) => {
-            console.log('Validate Failed:', info);
-          });
+        form.validateFields().then((values) => {
+          onCreate(values);
+        });
       }}
     >
       <Form

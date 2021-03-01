@@ -7,19 +7,17 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-
 const { TextArea } = Input;
 
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
-  const { loading } = props
+  const { loading } = props;
   useEffect(() => {
     props.dispatch({
       type: 'document/setState',
       params: { formRef: form },
     });
   }, []);
-
 
   return (
     <Modal
@@ -32,21 +30,16 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       cancelText="取消"
       onCancel={onCancel}
       onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            onCreate(values);
-          })
-          .catch((info) => {
-            console.log('Validate Failed:', info);
-          });
+        form.validateFields().then((values) => {
+          onCreate(values);
+        });
       }}
     >
       <Form
         name={'liter'}
         form={form}
         {...layout}
-      // initialValues={props.formData}
+        // initialValues={props.formData}
       >
         <Form.Item
           name="LiterCode"
@@ -70,7 +63,12 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
-          <InputNumber style={{ width: "100%" }} placeholder="请输入文献年份" min={0} maxLength={4} />
+          <InputNumber
+            style={{ width: '100%' }}
+            placeholder="请输入文献年份"
+            min={0}
+            maxLength={4}
+          />
         </Form.Item>
         <Form.Item
           name="LiterName"
@@ -82,14 +80,14 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
-          <TextArea placeholder="请输入文献名称" autoSize={{ minRows: 2, maxRows: 6 }} maxLength={500} />
+          <TextArea
+            placeholder="请输入文献名称"
+            autoSize={{ minRows: 2, maxRows: 6 }}
+            maxLength={500}
+          />
         </Form.Item>
 
-        <Form.Item
-          name="IsValid"
-          label="是否有效"
-          valuePropName="checked"
-        >
+        <Form.Item name="IsValid" label="是否有效" valuePropName="checked">
           <Checkbox />
         </Form.Item>
       </Form>

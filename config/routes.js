@@ -43,12 +43,6 @@ export default [
                 path: '/Materia',
                 icon: 'table',
                 routes: [
-                  // {
-                  //   name: '材料录入',
-                  //   path: '/Materia/MaterialEnter',
-                  //   component: './Material/MaterialEnter',
-                  //   authority: ['admin'],
-                  // },
                   {
                     name: '材料管理',
                     path: '/Materia/MaterialManager',
@@ -78,6 +72,7 @@ export default [
                     name: '人员管理',
                     path: '/System/Personnel',
                     component: './System/Personnel',
+                    authority: ['admin', 'user'],
                   },
                   {
                     name: '字典设置',

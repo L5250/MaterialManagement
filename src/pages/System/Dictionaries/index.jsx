@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Table, Space, Row, Col, Layout, Button, Modal, Input } from 'antd';
+import { Table, Space, Row, Col, Layout, Button, Modal, Input, message } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
 import ModalFormDicItem from './components/modalFormItem';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 const { Header, Content } = Layout;
@@ -12,13 +13,22 @@ const Dictionaries = (props) => {
   const [visible, setVisible] = useState(false);
   const [visibleItem, setVisibleItem] = useState(false);
 
-  const { dispatch, rowData, rowItemData, loading, formDicItemRef, dicSortsSourceData, dicSortsData, dicItemData, dicItemSourceData } = props;
+  const {
+    dispatch,
+    rowData,
+    rowItemData,
+    loading,
+    formDicItemRef,
+    dicSortsSourceData,
+    dicSortsData,
+    dicItemData,
+    dicItemSourceData,
+  } = props;
 
   // 获取字典分类
-  const getDictSorts = (params = { year: 0, keyWords: '' }) => {
+  const getDictSorts = (params = { year: 0 }) => {
     dispatch({
       type: 'dictionaries/getDictSorts',
-      params: { keyWords: params.keyWords ?? props.keyWords },
     });
   };
 
@@ -28,9 +38,6 @@ const Dictionaries = (props) => {
       params: {
         formData: {
           ...values,
-          // IsModify: values.IsModify ? 1 : 0,
-          // IsEnable: values.IsEnable ? 1 : 0,
-          // IsEnable: 1,
           DictSortId: rowData.DictSortId || '',
         },
       },
@@ -42,6 +49,7 @@ const Dictionaries = (props) => {
           type: 'dictionaries/setState',
           params: { dicItemData: [], dicItemSourceData: [] },
         });
+        message.success('保存字典分类成功！');
       }
     });
   };
@@ -89,40 +97,43 @@ const Dictionaries = (props) => {
                 type: 'dictionaries/setState',
                 params: { dicItemData: [], dicItemSourceData: [] },
               });
+              message.success('删除字典分类成功！');
             }
           });
       },
     });
   };
   const onSearch = (value) => {
-    const arr = dicSortsSourceData.filter(item => {
-      return item.DictSortName.indexOf(value) !== -1 || item.DictSortCode.indexOf(value) !== -1
-    })
+    const arr = dicSortsSourceData.filter((item) => {
+      return item.DictSortName.indexOf(value) !== -1 || item.DictSortCode.indexOf(value) !== -1;
+    });
     if (value === '') {
       dispatch({
         type: 'dictionaries/setState',
-        params: { dicSortsData: dicSortsSourceData }
+        params: { dicSortsData: dicSortsSourceData },
       });
     } else {
       dispatch({
         type: 'dictionaries/setState',
-        params: { dicSortsData: arr }
+        params: { dicSortsData: arr },
       });
     }
   };
 
   // 字典项
-  const getDicItemData = (record) => {
-    dispatch({
-      type: 'dictionaries/setState',
-      params: { rowData: record },
-    });
-    dispatch({
-      type: 'dictionaries/getDictItems',
-      params: {
-        keyId: record.DictSortId,
-      },
-    }).then((res) => { });
+  const getDicItemData = (record = {}) => {
+    if (record.DictSortId) {
+      dispatch({
+        type: 'dictionaries/setState',
+        params: { rowData: record },
+      });
+      dispatch({
+        type: 'dictionaries/getDictItems',
+        params: {
+          keyId: record.DictSortId,
+        },
+      }).then((res) => {});
+    }
   };
   const onCreateItem = (values) => {
     dispatch({
@@ -141,6 +152,7 @@ const Dictionaries = (props) => {
       if (res.State) {
         setVisibleItem(false);
         getDicItemData(rowData);
+        message.success('保存字典项成功！');
       }
     });
   };
@@ -177,28 +189,28 @@ const Dictionaries = (props) => {
           params: {
             keyId: record.DictItemId,
           },
-        })
-          .then((res) => {
-            if (res.State) {
-              getDicItemData(rowData);
-            }
-          });
+        }).then((res) => {
+          if (res.State) {
+            getDicItemData(rowData);
+            message.success('删除字典项成功！');
+          }
+        });
       },
     });
   };
   const onSearchItem = (value) => {
-    const arr = dicItemSourceData.filter(item => {
-      return item.DictItemName.indexOf(value) !== -1 || item.DictItemCode.indexOf(value) !== -1
-    })
+    const arr = dicItemSourceData.filter((item) => {
+      return item.DictItemName.indexOf(value) !== -1 || item.DictItemCode.indexOf(value) !== -1;
+    });
     if (value === '') {
       dispatch({
         type: 'dictionaries/setState',
-        params: { dicItemData: dicItemSourceData }
+        params: { dicItemData: dicItemSourceData },
       });
     } else {
       dispatch({
         type: 'dictionaries/setState',
-        params: { dicItemData: arr }
+        params: { dicItemData: arr },
       });
     }
   };
@@ -227,13 +239,6 @@ const Dictionaries = (props) => {
       title: '分类名称',
       align: 'center',
       dataIndex: 'DictSortName',
-      render: (text, record) => {
-        return (
-          <div onClick={() => getDicItemData(record)}>
-            <a>{text}</a>
-          </div>
-        );
-      },
     },
     {
       title: '分类项编码',
@@ -252,13 +257,22 @@ const Dictionaries = (props) => {
       fixed: 'right',
       width: 200,
       render: (record) => (
-        <Space size="middle">
-          <a disabled={record.IsModify === 0} onClick={(e) => editSorts(e, record)}>
-            编辑
-          </a>
-          <a onClick={(e) => deleteSorts(e, record)}>
-            删除
-          </a>
+        <Space>
+          <Button
+            icon={<EditOutlined />}
+            type="primary"
+            title="编辑"
+            onClick={(e) => editSorts(e, record)}
+            disabled={record.IsModify === 0}
+          />
+          <Button
+            icon={<DeleteOutlined />}
+            type="primary"
+            title="删除"
+            danger
+            onClick={(e) => deleteSorts(e, record)}
+            disabled={record.IsModify === 0}
+          />
         </Space>
       ),
     },
@@ -268,8 +282,11 @@ const Dictionaries = (props) => {
     {
       title: '序号',
       align: 'center',
-      dataIndex: 'ListOrder',
+      dataIndex: '',
       width: 120,
+      render: (text, record, index) => {
+        return index + 1;
+      },
     },
     {
       title: '字典名称',
@@ -293,21 +310,34 @@ const Dictionaries = (props) => {
       fixed: 'right',
       width: 200,
       render: (record) => (
-        <Space size="middle">
-          <a disabled={rowData.IsModify === 0} onClick={() => editItem(record)}>
-            编辑
-          </a>
-          <a disabled={rowData.IsModify === 0} onClick={() => deleteItem(record)}>
-            删除
-          </a>
+        <Space>
+          <Button
+            icon={<EditOutlined />}
+            type="primary"
+            title="编辑"
+            onClick={() => editItem(record)}
+            disabled={rowData.IsModify === 0}
+          />
+          <Button
+            icon={<DeleteOutlined />}
+            type="primary"
+            title="删除"
+            danger
+            onClick={() => deleteItem(record)}
+            disabled={rowData.IsModify === 0}
+          />
         </Space>
       ),
     },
   ];
 
+  const setRowClassName = (record) => {
+    return record.DictSortId === rowData.DictSortId ? 'clickRowStyl' : '';
+  };
+
   return (
     <PageContainer>
-      <Layout style={{ height: "50%" }}>
+      <Layout style={{ height: '50%' }}>
         <Header style={{ marginBottom: 10 }}>
           <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Search
@@ -319,7 +349,7 @@ const Dictionaries = (props) => {
             />
             <Button style={{ textAlign: 'right' }} onClick={addSorts} key="2" type="primary">
               新增
-              </Button>
+            </Button>
           </Space>
         </Header>
         <Content>
@@ -329,6 +359,7 @@ const Dictionaries = (props) => {
             dataSource={props.dicSortsData}
             rowKey="DictSortId"
             pagination={false}
+            rowClassName={setRowClassName}
             scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
             onRow={(record) => {
               return {
@@ -341,7 +372,7 @@ const Dictionaries = (props) => {
         </Content>
       </Layout>
 
-      <Layout style={{ marginTop: 10, height: "50%" }}>
+      <Layout style={{ marginTop: 10, height: '50%' }}>
         <Header style={{ marginBottom: 10 }}>
           <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Search
@@ -353,7 +384,7 @@ const Dictionaries = (props) => {
             />
             <Button style={{ textAlign: 'right' }} onClick={addItem} key="2" type="primary">
               新增
-              </Button>
+            </Button>
           </Space>
         </Header>
         <Content>

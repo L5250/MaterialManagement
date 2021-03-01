@@ -11,7 +11,8 @@ import {
   Upload,
   message,
   Select,
-  Checkbox, Switch
+  Checkbox,
+  Switch,
 } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
@@ -53,11 +54,9 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       cancelText="取消"
       onCancel={onCancel}
       onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            onCreate(values);
-          })
+        form.validateFields().then((values) => {
+          onCreate(values);
+        });
       }}
     >
       <Form
@@ -92,7 +91,16 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           <Search placeholder="请输入密码" enterButton="重置" onSearch={reset} />
         </Form.Item>
 
-        <Form.Item name="UserName" label="用户姓名">
+        <Form.Item
+          name="UserName"
+          label="用户姓名"
+          rules={[
+            {
+              required: true,
+              message: '用户姓名为必填项！',
+            },
+          ]}
+        >
           <Input placeholder="请输入用户姓名" />
         </Form.Item>
 
