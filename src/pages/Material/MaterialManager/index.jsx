@@ -5,6 +5,7 @@ import { connect } from 'umi';
 import ModalForm from './components/modalForm';
 import CheckMaterial from '@/components/CheckMaterial';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import formatFormula from '@/utils/formatFormula';
 
 const { Search } = Input;
 const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
@@ -163,6 +164,7 @@ const MaterialManager = (props) => {
       title: '分子式',
       align: 'center',
       dataIndex: 'ChemicalFormula',
+      render: (text) => formatFormula(text),
     },
     {
       title: '分子量',
@@ -173,6 +175,24 @@ const MaterialManager = (props) => {
       title: '密度',
       align: 'center',
       dataIndex: 'Density',
+    },
+    {
+      title: '沸点',
+      align: 'center',
+      dataIndex: 'BoilingPoint',
+      render: (text) => `${text}℃`,
+    },
+    {
+      title: '熔点',
+      align: 'center',
+      dataIndex: 'MeltingPoint',
+      render: (text) => `${text}℃`,
+    },
+    {
+      title: '闪点',
+      align: 'center',
+      dataIndex: 'FlashPoint',
+      render: (text) => `${text}℃`,
     },
     {
       title: '操作',

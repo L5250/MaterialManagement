@@ -28,13 +28,13 @@ export default [
             routes: [
               {
                 path: '/',
-                redirect: '/welcome',
+                redirect: '/Home',
               },
               {
-                path: '/welcome',
-                name: 'welcome',
-                icon: 'smile',
-                component: './Welcome',
+                path: '/Home',
+                name: '首页',
+                icon: 'home',
+                component: './Home',
               },
 
               //

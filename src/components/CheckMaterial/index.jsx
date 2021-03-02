@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { connect } from 'umi';
 import BraftEditor from 'braft-editor';
 import 'braft-editor/dist/index.css';
+import formatFormula from '@/utils/formatFormula';
 
 const CheckMaterial = (props) => {
   const { dispatch, visible, onCancel, dataObj, loading } = props;
@@ -27,20 +28,6 @@ const CheckMaterial = (props) => {
     const htmlString = dataObj.Examples || null;
     setEeditorState(BraftEditor.createEditorState(htmlString));
     setCaseVisible(true);
-  };
-
-  //
-  const changeChemicalFormula = (value = '') => {
-    let arr = [];
-    if (value) {
-      arr = value.split('');
-    }
-    return arr.map((item, index) => {
-      if (!Number.isNaN(Number(item))) {
-        return <sub key={index}>{item}</sub>;
-      }
-      return <span key={index}>{item}</span>;
-    });
   };
 
   // 文献弹框表格
@@ -94,7 +81,7 @@ const CheckMaterial = (props) => {
         <Descriptions.Item label="密度">{dataObj.Density}</Descriptions.Item>
         <Descriptions.Item label="沸点">{dataObj.BoilingPoint}℃</Descriptions.Item>
         <Descriptions.Item label="分子式">
-          {changeChemicalFormula(dataObj.ChemicalFormula)}
+          {formatFormula(dataObj.ChemicalFormula)}
         </Descriptions.Item>
         <Descriptions.Item label="熔点">{dataObj.MeltingPoint}℃</Descriptions.Item>
         <Descriptions.Item label="MSDN">

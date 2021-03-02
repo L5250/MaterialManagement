@@ -12,15 +12,16 @@ import { getMatchMenu } from '@umijs/route-utils';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import logo from '../assets/logo.svg';
+import logoPng from '../assets/logo1.png';
 
 const noMatch = (
   <Result
     status={403}
     title="403"
-    subTitle="Sorry, you are not authorized to access this page."
+    subTitle="没有访问权限"
     extra={
       <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+        <Link to="/user/login">去登陆</Link>
       </Button>
     }
   />
@@ -141,6 +142,9 @@ const BasicLayout = (props) => {
       postMenuData={(menuData) => {
         menuDataRef.current = menuData || [];
         return menuData || [];
+      }}
+      headerContentRender={() => {
+        return <img src={logoPng} style={{ height: 42 }} />;
       }}
     >
       <Authorized authority={authorized.authority} noMatch={noMatch}>
