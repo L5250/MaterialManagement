@@ -58,21 +58,21 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   }
 
   const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      return;
-    }
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (imageUrl) => {
-        dispatch({
-          type: 'materialManager/setState',
-          params: {
-            imageUrl64: imageUrl,
-          },
-        });
-        form.setFieldsValue({ Symbol: imageUrl });
+    // if (info.file.status === 'uploading') {
+    //   return;
+    // }
+    // if (info.file.status === 'done') {
+    getBase64(info.file.originFileObj, (imageUrl) => {
+      dispatch({
+        type: 'materialManager/setState',
+        params: {
+          imageUrl64: imageUrl,
+        },
       });
-      form.setFieldsValue({ Symbol: imageUrl64 });
-    }
+      form.setFieldsValue({ Symbol: imageUrl });
+    });
+    form.setFieldsValue({ Symbol: imageUrl64 });
+    // }
   };
 
   // 打开文献弹框
@@ -286,10 +286,12 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             <Form.Item name="Symbol" label="上传符号">
               <Space direction="vertical">
                 <Upload
+                  action="#"
                   showUploadList={false}
                   beforeUpload={beforeUpload}
                   maxCount={1}
                   onChange={handleChange}
+                  customRequest={() => {}}
                 >
                   <Button style={{ width: '100%' }} icon={<UploadOutlined />}>
                     上传
