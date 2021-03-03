@@ -12,7 +12,7 @@ import { getMatchMenu } from '@umijs/route-utils';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import logo from '../assets/logo.svg';
-import logoPng from '../assets/logo1.png';
+import logoPng from '../assets/logo.png';
 
 const noMatch = (
   <Result
@@ -144,7 +144,9 @@ const BasicLayout = (props) => {
         return menuData || [];
       }}
       headerContentRender={() => {
-        return <img src={logoPng} style={{ height: 42 }} />;
+        return (
+          <img src={logoPng} style={{ height: 100, position: 'absolute', top: -20, left: -20 }} />
+        );
       }}
     >
       <Authorized authority={authorized.authority} noMatch={noMatch}>
