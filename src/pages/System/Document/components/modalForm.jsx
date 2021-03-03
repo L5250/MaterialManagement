@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'umi';
-import { Modal, Form, Input, InputNumber, Checkbox } from 'antd';
+import { Modal, Form, Input, InputNumber, Checkbox, DatePicker } from 'antd';
 
 const layout = {
   labelCol: { span: 8 },
@@ -35,19 +35,14 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         });
       }}
     >
-      <Form
-        name={'liter'}
-        form={form}
-        {...layout}
-        // initialValues={props.formData}
-      >
+      <Form name={'liter'} form={form} {...layout} initialValues={{ IsValid: 1 }}>
         <Form.Item
           name="LiterCode"
           label="DOI号"
           rules={[
             {
               required: true,
-              message: '请输入DOI号',
+              message: 'DOI号为必填项！',
             },
           ]}
         >
@@ -59,15 +54,15 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           rules={[
             {
               required: true,
-              message: '请输入文献年份',
+              message: '文献年份为必填项！',
             },
           ]}
         >
-          <InputNumber
+          <DatePicker
+            picker="year"
             style={{ width: '100%' }}
-            placeholder="请输入文献年份"
-            min={0}
-            maxLength={4}
+            placeholder="请选择文献年份"
+            format={'YYYY'}
           />
         </Form.Item>
         <Form.Item
@@ -76,7 +71,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
           rules={[
             {
               required: true,
-              message: '请输入文献名称',
+              message: '文献名称为必填项！',
             },
           ]}
         >

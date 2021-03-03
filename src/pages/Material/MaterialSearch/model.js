@@ -14,28 +14,7 @@ export default {
     types: [], // 自愈类型列表
   },
   effects: {
-    *materialSearch(
-      {
-        params = {
-          chemical: '',
-          edBoil: null,
-          edFla: null,
-          edMel: null,
-          ele1: '',
-          ele2: '',
-          ele3: '',
-          ele4: '',
-          keyWords: '',
-          scenes: '',
-          searchType: 1,
-          stBoil: null,
-          stFla: null,
-          stMel: null,
-          types: '',
-        },
-      },
-      { call, put },
-    ) {
+    *materialSearch({ params = {} }, { call, put }) {
       const { Data, State } = yield call(service.materialSearch, params);
       yield put({
         type: 'setState',

@@ -1,23 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  Card,
-  Alert,
-  Typography,
-  Table,
-  Space,
-  Row,
-  Col,
-  Layout,
-  Button,
-  Dropdown,
-  Menu,
-  Modal,
-  message,
-  Input,
-  Checkbox,
-  Form,
-} from 'antd';
+import { Table, Space, Button, Modal, message, Input } from 'antd';
 import { connect } from 'umi';
 import { EditOutlined, RedoOutlined, DeleteOutlined } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
@@ -27,7 +10,7 @@ const { Search } = Input;
 const Personnel = (props) => {
   const [visible, setVisible] = useState(false);
 
-  const { dispatch, rowData, loading } = props;
+  const { dispatch, rowData, loading, dataSource } = props;
 
   const getAllUsers = () => {
     dispatch({
@@ -86,7 +69,7 @@ const Personnel = (props) => {
     }
     Modal.confirm({
       title: '提示',
-      content: '确认删除用户？',
+      content: '是否确认删除用户？',
       onOk: () => {
         dispatch({
           type: 'personnel/deleteUserInfo',
@@ -101,20 +84,41 @@ const Personnel = (props) => {
     });
   };
   const resetPassword = (record) => {
-    dispatch({
-      type: 'personnel/saveUserInfo',
-      params: {
-        formData: { ...record, PassWord: '' },
+    Modal.confirm({
+      title: '提示！',
+      content: '重置后密码为【123456】，是否确定重置密码？',
+      onOk: () => {
+        dispatch({
+          type: 'personnel/saveUserInfo',
+          params: {
+            formData: { ...record, PassWord: '' },
+          },
+        }).then((res) => {
+          if (res.State) {
+            getAllUsers();
+            message.success('重置成功！');
+          }
+        });
       },
-    }).then((res) => {
-      if (res.State) {
-        getAllUsers();
-        message.success('重置成功！');
-      }
     });
   };
 
-  const onSearch = (value) => {};
+  const onSearch = (value) => {
+    const arr = dataSource.filter((item) => {
+      return item.UserName.indexOf(value) !== -1 || item.UserCode.indexOf(value) !== -1;
+    });
+    if (value === '') {
+      dispatch({
+        type: 'personnel/setState',
+        params: { data: dataSource },
+      });
+    } else {
+      dispatch({
+        type: 'personnel/setState',
+        params: { data: arr },
+      });
+    }
+  };
 
   useEffect(() => {
     getAllUsers();
@@ -166,6 +170,7 @@ const Personnel = (props) => {
       title: '操作',
       align: 'center',
       dataIndex: '',
+      fixed: 'right',
       width: 200,
       render: (record) => (
         <Space>
@@ -218,7 +223,7 @@ const Personnel = (props) => {
         columns={columns}
         dataSource={props.data}
         rowKey="UserId"
-        scroll={{ y: 'calc(100vh - 320px)' }}
+        scroll={{ x: 1200, y: 'calc(100% - 50px)' }}
         pagination={false}
       />
       <ModalForm

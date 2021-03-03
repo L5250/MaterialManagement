@@ -4,6 +4,7 @@ export default {
   namespace: 'personnel',
   state: {
     data: [],
+    dataSource: [],
     formRef: {},
     rowData: {},
     title: '',
@@ -13,9 +14,9 @@ export default {
       const { Data, State } = yield call(service.getAllUsers, params);
       yield put({
         type: 'setState',
-        params: { data: Data },
+        params: { data: Data, dataSource: Data },
       });
-      return { Data, State }
+      return { Data, State };
     },
     *deleteUserInfo({ params }, { call, put }) {
       const { Data, State } = yield call(service.deleteUserInfo, params);
@@ -23,7 +24,7 @@ export default {
         type: 'setState',
         params,
       });
-      return { Data, State }
+      return { Data, State };
     },
     *saveUserInfo({ params }, { call, put }) {
       const { Data, State } = yield call(service.saveUserInfo, params);
@@ -31,9 +32,8 @@ export default {
         type: 'setState',
         params,
       });
-      return { Data, State }
+      return { Data, State };
     },
-
   },
   reducers: {
     setState: (state, { params }) => {

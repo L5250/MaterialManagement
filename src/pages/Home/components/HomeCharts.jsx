@@ -2,39 +2,27 @@ import React from 'react';
 import { connect } from 'umi';
 import { DualAxes } from '@ant-design/charts';
 
-const HomeCharts = () => {
-  const data = [
-    {
-      time: '2019-03',
-      value: 350,
-      count: 800,
-    },
-    {
-      time: '2019-04',
-      value: 900,
-      count: 600,
-    },
-    {
-      time: '2019-05',
-      value: 300,
-      count: 400,
-    },
-    {
-      time: '2019-06',
-      value: 450,
-      count: 380,
-    },
-    {
-      time: '2019-07',
-      value: 470,
-      count: 220,
-    },
-  ];
+const HomeCharts = (props) => {
+  const { literPerDate } = props;
   const config = {
     autoFit: true,
-    data: [data, data],
-    xField: 'time',
-    yField: ['value', 'count'],
+    data: [literPerDate, literPerDate],
+    xField: 'x',
+    yField: ['y1', 'y2'],
+    meta: {
+      x: {
+        alias: '年',
+        formatter: (e) => {
+          return `${e}年`;
+        },
+      },
+      y1: {
+        alias: '文献数',
+      },
+      y2: {
+        alias: '文献提及材料数',
+      },
+    },
     geometryOptions: [
       { geometry: 'column' },
       {

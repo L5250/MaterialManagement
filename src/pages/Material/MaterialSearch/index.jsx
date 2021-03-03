@@ -39,11 +39,12 @@ const MaterialSearch = (props) => {
       ...values,
       // Symbol: imageUrl64,
       // MaterialRecordID: rowData.MaterialRecordID || '',
+      ele2: values.ele2 || values.ele1 || undefined,
+      ele3: values.ele3 || values.ele1 || undefined,
+      ele4: values.ele4 || values.ele1 || undefined,
       scenes: values.scenes?.toString(),
       types: values.types?.toString(),
     };
-    console.log(formData);
-
     dispatch({
       type: 'materialSearch/materialSearch',
       params: {
@@ -52,7 +53,6 @@ const MaterialSearch = (props) => {
     }).then((res) => {
       if (res.State) {
         setVisible(false);
-        materialSearch();
       }
     });
   };
@@ -140,7 +140,8 @@ const MaterialSearch = (props) => {
       title: '操作',
       align: 'center',
       dataIndex: '',
-      width: 200,
+      fixed: 'right',
+      width: 80,
       render: (record) => (
         <Space>
           <Button
@@ -179,7 +180,7 @@ const MaterialSearch = (props) => {
         columns={columns}
         dataSource={props.data}
         rowKey="key"
-        scroll={{ y: 'calc(100vh - 320px)' }}
+        scroll={{ x: 1200, y: 'calc(100% - 50px)' }}
         pagination={false}
       />
       <ModalForm

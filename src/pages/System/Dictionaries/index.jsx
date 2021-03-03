@@ -356,11 +356,11 @@ const Dictionaries = (props) => {
           <Table
             loading={loading && loading.models.dictionaries}
             columns={columns}
-            dataSource={props.dicSortsData}
+            dataSource={props.dicSortsSourceData || []}
             rowKey="DictSortId"
             pagination={false}
             rowClassName={setRowClassName}
-            scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
+            scroll={{ x: 800, y: 'calc(100% - 50px)' }}
             onRow={(record) => {
               return {
                 onClick: () => {
@@ -391,10 +391,10 @@ const Dictionaries = (props) => {
           <Table
             loading={loading && loading.models.dictionaries}
             columns={dicItemColumns}
-            dataSource={props.dicItemData}
+            dataSource={props.dicItemData || []}
             rowKey="DictItemId"
             pagination={false}
-            scroll={{ x: 800, y: 'calc(50vh - 200px)' }}
+            scroll={{ x: 800, y: 'calc(100% - 50px)' }}
           />
         </Content>
       </Layout>

@@ -17,12 +17,32 @@ const Home = (props) => {
   const [visible, setVisible] = useState(false);
   const [checkVisible, setCheckVisible] = useState(false);
 
-  const { dispatch, rowData, loading, imageUrl64 } = props;
+  const { dispatch, rowData, loading, dataTop5 } = props;
 
+  const getDataTop5 = () => {
+    dispatch({
+      type: 'home/getDataTop5',
+    });
+  };
+  const getLiterToMaterialCount = () => {
+    dispatch({
+      type: 'home/getLiterToMaterialCount',
+    });
+  };
+  const getLiterPerYearCount = () => {
+    dispatch({
+      type: 'home/getLiterPerYearCount',
+    });
+  };
+  const getAppliSceneDist = () => {
+    dispatch({
+      type: 'home/getAppliSceneDist',
+    });
+  };
   // 查看
   const check = (record) => {
     dispatch({
-      type: 'materialManager/setState',
+      type: 'home/setState',
       params: {
         rowData: { ...record },
       },
@@ -30,12 +50,25 @@ const Home = (props) => {
     setCheckVisible(true);
   };
 
+  useEffect(() => {
+    getDataTop5();
+    getLiterToMaterialCount();
+    getLiterPerYearCount();
+    getAppliSceneDist();
+  }, []);
   // 表格列
   const columns = [
     {
       title: 'CAS号',
       align: 'center',
       dataIndex: 'MaterialRecordCode',
+      render: (text, record) => (
+        <Space>
+          <Button type="link" onClick={() => check(record)} title="CAS号">
+            {text}
+          </Button>
+        </Space>
+      ),
     },
     {
       title: '常用名',
@@ -81,56 +114,56 @@ const Home = (props) => {
       dataIndex: 'FlashPoint',
       render: (text) => `${text}℃`,
     },
-    {
-      title: '操作',
-      align: 'center',
-      dataIndex: '',
-      width: 200,
-      render: (record) => (
-        <Space>
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => check(record)}
-            type="primary"
-            title="查看"
-          />
-        </Space>
-      ),
-    },
+    // {
+    //   title: '操作',
+    //   align: 'center',
+    //   dataIndex: '',
+    //   width: 200,
+    //   render: (record) => (
+    //     <Space>
+    //       <Button
+    //         icon={<EyeOutlined />}
+    //         onClick={() => check(record)}
+    //         type="primary"
+    //         title="查看"
+    //       />
+    //     </Space>
+    //   ),
+    // },
   ];
 
   return (
     <Layout className={styles.home}>
       <Content>
         <Row gutter={24} style={{ height: '50%', marginBottom: 12 }}>
-          <Col span={16} className={styles.home_col}>
-            <Card title="1" bordered={false} hoverable>
+          <Col span={18} className={styles.home_col}>
+            <Card title="最近材料" bordered={false} hoverable>
               <Table
                 loading={loading && loading.models.materialManager}
                 columns={columns}
-                dataSource={props.data}
+                dataSource={dataTop5}
                 rowKey="key"
-                scroll={{ y: 'calc(100vh - 320px)' }}
+                scroll={{ x: 800, y: 'calc(100% - 50px)' }}
                 pagination={false}
               />
             </Card>
           </Col>
-          <Col span={8} className={styles.home_col}>
-            <Card title="1" bordered={false} hoverable>
-              <HomePie />
+          <Col span={6} className={styles.home_col}>
+            <Card title="引用文献次数" bordered={false} hoverable>
+              <HomeWordCloud />
             </Card>
           </Col>
         </Row>
 
         <Row gutter={24} style={{ height: '50%' }}>
-          <Col span={12} className={styles.home_col}>
-            <Card title="1" bordered={false} hoverable>
+          <Col span={14} className={styles.home_col}>
+            <Card title="文献年份计数统计" bordered={false} hoverable>
               <HomeCharts />
             </Card>
           </Col>
-          <Col span={12} className={styles.home_col}>
-            <Card title="1" bordered={false} hoverable>
-              <HomeWordCloud />
+          <Col span={10} className={styles.home_col}>
+            <Card title="应用场景占比" bordered={false} hoverable>
+              <HomePie />
             </Card>
           </Col>
         </Row>

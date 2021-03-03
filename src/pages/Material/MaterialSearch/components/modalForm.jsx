@@ -31,9 +31,11 @@ const itemLayout = {
 };
 const eleLayout = {
   labelCol: { span: 11 },
-  wrapperCol: { span: 12 },
+  wrapperCol: { span: 13 },
 };
-
+const eleItemLayout = {
+  wrapperCol: { span: 24 },
+};
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
@@ -45,6 +47,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     });
   }, []);
 
+  console.log(form.getFieldValue('ele1'));
   return (
     <Modal
       confirmLoading={loading && loading.models.materialSearch}
@@ -138,17 +141,32 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             </Form.Item>
           </Col>
           <Col span={5}>
-            <Form.Item name="ele2" label="">
+            <Form.Item
+              name="ele2"
+              {...eleItemLayout}
+              label=""
+              dependencies={['ele1']}
+              // rules={[
+              //   ({ getFieldValue }) => ({
+              //     validator(_, value) {
+              //       if (!value || getFieldValue('ele1') === value) {
+              //         return Promise.resolve();
+              //       }
+              //       return Promise.reject('The two passwords that you entered do not match!');
+              //     },
+              //   }),
+              // ]}
+            >
               <Input />
             </Form.Item>
           </Col>
           <Col span={5}>
-            <Form.Item name="ele3" label="">
+            <Form.Item name="ele3" {...eleItemLayout} label="">
               <Input />
             </Form.Item>
           </Col>
           <Col span={5}>
-            <Form.Item name="ele4" label="">
+            <Form.Item name="ele4" {...eleItemLayout} label="">
               <Input />
             </Form.Item>
           </Col>
@@ -177,7 +195,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
           <Col span={24}>
             <Form.Item name="types" label="材料自愈类型" {...itemLayout}>
-              <Select mode="multiple" placeholder="请选择材料自愈类型">
+              <Select placeholder="请选择材料自愈类型">
                 {types.map((item) => {
                   return (
                     <Option key={item.DictItemId} value={item.DictItemId}>

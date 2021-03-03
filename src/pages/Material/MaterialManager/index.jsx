@@ -198,6 +198,7 @@ const MaterialManager = (props) => {
       title: '操作',
       align: 'center',
       dataIndex: '',
+      fixed: 'right',
       width: 200,
       render: (record) => (
         <Space>
@@ -263,7 +264,7 @@ const MaterialManager = (props) => {
         columns={columns}
         dataSource={props.data}
         rowKey="key"
-        scroll={{ y: 'calc(100vh - 320px)' }}
+        scroll={{ x: 1200, y: 'calc(100% - 50px)' }}
         pagination={false}
       />
       <ModalForm

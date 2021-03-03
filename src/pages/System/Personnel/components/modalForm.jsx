@@ -29,7 +29,7 @@ const { Search } = Input;
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
 
-  const { loading } = props;
+  const { loading, rowData } = props;
 
   useEffect(() => {
     props.dispatch({
@@ -74,7 +74,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
-          <Input placeholder="请输入用户名" />
+          <Input placeholder="请输入用户名" disabled={rowData.UserCode === 'admin'} />
         </Form.Item>
 
         <Form.Item
@@ -100,7 +100,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             },
           ]}
         >
-          <Input placeholder="请输入用户姓名" />
+          <Input placeholder="请输入用户姓名" disabled={rowData.UserCode === 'admin'} />
         </Form.Item>
 
         <Form.Item name="UserTel" label="联系电话">
@@ -110,13 +110,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         <Row>
           <Col span={12}>
             <Form.Item {...layoutSingle} name="IsAdmin" label="是否管理员" valuePropName="checked">
-              <Switch />
+              <Switch disabled={rowData.UserCode === 'admin'} />
             </Form.Item>
           </Col>
 
           <Col span={12}>
             <Form.Item {...layoutSingle} name="IsValid" label="是否启用" valuePropName="checked">
-              <Switch />
+              <Switch disabled={rowData.UserCode === 'admin'} />
             </Form.Item>
           </Col>
         </Row>

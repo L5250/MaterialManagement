@@ -4,6 +4,7 @@ import { Table, Space, Layout, Button, Modal, Input, message } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const { Content } = Layout;
 const { Search } = Input;
@@ -24,7 +25,12 @@ const DocumentManagement = (props) => {
     dispatch({
       type: 'document/saveLiter',
       params: {
-        formData: { ...values, IsValid: values.IsValid ? 1 : 0, LiterId: rowData.LiterId || '' },
+        formData: {
+          ...values,
+          IsValid: values.IsValid ? 1 : 0,
+          LiterYear: moment(values).format('YYYY'),
+          LiterId: rowData.LiterId || '',
+        },
       },
     }).then((res) => {
       if (res.State) {
@@ -47,11 +53,11 @@ const DocumentManagement = (props) => {
   };
 
   const edit = (record) => {
-    props.formRef.setFieldsValue({ ...record });
+    props.formRef.setFieldsValue({ ...record, LiterYear: moment(record.LiterYear, 'YYYY') });
     props.dispatch({
       type: 'document/setState',
       params: {
-        rowData: record,
+        rowData: { ...record },
         title: '编辑文献',
       },
     });
@@ -174,13 +180,11 @@ const DocumentManagement = (props) => {
         <Content>
           <Table
             loading={loading && loading.models.document}
-            // style={{ height: "100%" }}
             columns={columns}
             dataSource={props.data}
             rowKey="LiterId"
             pagination={false}
-            // scroll={{ y: 'calc(100vh - 300px)' }}
-            scroll={{ x: 1200, y: '100%' }}
+            scroll={{ x: 1200, y: 'calc(100% - 50px)' }}
           />
         </Content>
       </Layout>
