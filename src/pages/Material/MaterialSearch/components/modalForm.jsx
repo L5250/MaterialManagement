@@ -38,7 +38,8 @@ const eleItemLayout = {
 };
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
-
+  const [eleDisabled, setEleDisabled] = useState({ ele2: true, ele3: true, ele4: true });
+  console.log(eleDisabled);
   const { dispatch, loading, types, scenes } = props;
   useEffect(() => {
     props.dispatch({
@@ -46,6 +47,18 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       params: { formRef: form },
     });
   }, []);
+
+  const eleChange = (a, b) => {
+    if (b.ele1) {
+      setEleDisabled({ ...eleDisabled, ele2: false });
+    }
+    if (b.ele2) {
+      setEleDisabled({ ...eleDisabled, ele3: false });
+    }
+    if (b.ele3) {
+      setEleDisabled({ ...eleDisabled, ele4: false });
+    }
+  };
 
   return (
     <Modal
@@ -64,7 +77,15 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         });
       }}
     >
-      <Form form={form} {...layout} name="materialSearch" initialValues={{ searchType: 1 }}>
+      <Form
+        form={form}
+        {...layout}
+        name="materialSearch"
+        initialValues={{ searchType: 1 }}
+        onValuesChange={(a, b) => {
+          eleChange(a, b);
+        }}
+      >
         <Row gutter={24}>
           <Col span={24}>
             <Form.Item name="keyWords" label="关键字" {...itemLayout}>
@@ -141,33 +162,18 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
             </Form.Item>
           </Col>
           <Col span={5}>
-            <Form.Item
-              name="ele2"
-              {...eleItemLayout}
-              label=""
-              dependencies={['ele1']}
-              // rules={[
-              //   ({ getFieldValue }) => ({
-              //     validator(_, value) {
-              //       if (!value || getFieldValue('ele1') === value) {
-              //         return Promise.resolve();
-              //       }
-              //       return Promise.reject('The two passwords that you entered do not match!');
-              //     },
-              //   }),
-              // ]}
-            >
-              <Input />
+            <Form.Item name="ele2" {...eleItemLayout} label="">
+              <Input disabled={eleDisabled.ele2} />
             </Form.Item>
           </Col>
           <Col span={5}>
             <Form.Item name="ele3" {...eleItemLayout} label="">
-              <Input />
+              <Input disabled={eleDisabled.ele3} />
             </Form.Item>
           </Col>
           <Col span={5}>
             <Form.Item name="ele4" {...eleItemLayout} label="">
-              <Input />
+              <Input disabled={eleDisabled.ele4} />
             </Form.Item>
           </Col>
 
