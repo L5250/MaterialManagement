@@ -70,6 +70,9 @@ const Personnel = (props) => {
     Modal.confirm({
       title: '提示',
       content: '是否确认删除用户？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
       onOk: () => {
         dispatch({
           type: 'personnel/deleteUserInfo',
@@ -87,6 +90,8 @@ const Personnel = (props) => {
     Modal.confirm({
       title: '提示！',
       content: '重置后密码为【123456】，是否确定重置密码？',
+      okText: '确定',
+      cancelText: '取消',
       onOk: () => {
         dispatch({
           type: 'personnel/saveUserInfo',

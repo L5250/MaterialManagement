@@ -47,7 +47,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     });
   }, []);
 
-  console.log(form.getFieldValue('ele1'));
   return (
     <Modal
       confirmLoading={loading && loading.models.materialSearch}

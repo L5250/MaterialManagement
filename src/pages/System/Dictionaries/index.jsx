@@ -82,6 +82,9 @@ const Dictionaries = (props) => {
     Modal.confirm({
       title: '提示',
       content: '确认删除字典分类？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
       onOk: () => {
         props
           .dispatch({
@@ -183,6 +186,9 @@ const Dictionaries = (props) => {
     Modal.confirm({
       title: '提示',
       content: '确认删除字典项？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
       onOk: () => {
         dispatch({
           type: 'dictionaries/deleteDictItem',
@@ -360,7 +366,7 @@ const Dictionaries = (props) => {
           <Table
             loading={loading && loading.models.dictionaries}
             columns={columns}
-            dataSource={props.dicSortsSourceData || []}
+            dataSource={props.dicSortsData || []}
             rowKey="DictSortId"
             pagination={false}
             rowClassName={setRowClassName}

@@ -105,6 +105,9 @@ const MaterialManager = (props) => {
     Modal.confirm({
       title: '提示',
       content: '确认删除自愈材料？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
       onOk: () => {
         dispatch({
           type: 'materialManager/deleteMaterialRecord',
