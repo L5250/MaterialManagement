@@ -39,7 +39,7 @@ const eleItemLayout = {
 const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   const [form] = Form.useForm();
   const [eleDisabled, setEleDisabled] = useState({ ele2: true, ele3: true, ele4: true });
-  console.log(eleDisabled);
+
   const { dispatch, loading, types, scenes } = props;
   useEffect(() => {
     props.dispatch({
@@ -60,6 +60,22 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     }
   };
 
+  const eleFieldsChange = (a) => {
+    const curname = a && a.length > 0 ? a[0].name[0] : '';
+    if (curname === 'ele1' && !form.getFieldValue('ele1')) {
+      form.setFieldsValue({ ele2: '', ele3: '', ele4: '' });
+      setEleDisabled({ ...eleDisabled, ele2: true, ele3: true, ele4: true });
+    }
+    if (curname === 'ele2' && !form.getFieldValue('ele2')) {
+      form.setFieldsValue({ ele3: '', ele4: '' });
+      setEleDisabled({ ...eleDisabled, ele3: true, ele4: true });
+    }
+    if (curname === 'ele3' && !form.getFieldValue('ele3')) {
+      form.setFieldsValue({ ele4: '' });
+      setEleDisabled({ ...eleDisabled, ele4: true });
+    }
+  };
+
   return (
     <Modal
       confirmLoading={loading && loading.models.materialSearch}
@@ -73,6 +89,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
       onCancel={onCancel}
       onOk={() => {
         form.validateFields().then((values) => {
+          setEleDisabled({ ele2: true, ele3: true, ele4: true });
           onCreate(values);
         });
       }}
@@ -85,17 +102,20 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         onValuesChange={(a, b) => {
           eleChange(a, b);
         }}
+        onFieldsChange={(a) => {
+          eleFieldsChange(a);
+        }}
       >
         <Row gutter={24}>
           <Col span={24}>
             <Form.Item name="keyWords" label="关键字" {...itemLayout}>
-              <Input placeholder="请输入常用名/英文名/CAS号关键字模糊查询" />
+              <Input autoComplete="off" placeholder="请输入常用名/英文名/CAS号关键字模糊查询" />
             </Form.Item>
           </Col>
 
           <Col span={24}>
             <Form.Item name="chemical" label="分子式" {...itemLayout}>
-              <Input placeholder="请输入分子式" />
+              <Input autoComplete="off" placeholder="请输入分子式" />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -158,22 +178,22 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
 
           <Col span={9}>
             <Form.Item name="ele1" label="所含元素" {...eleLayout}>
-              <Input />
+              <Input autoComplete="off" />
             </Form.Item>
           </Col>
           <Col span={5}>
             <Form.Item name="ele2" {...eleItemLayout} label="">
-              <Input disabled={eleDisabled.ele2} />
+              <Input autoComplete="off" disabled={eleDisabled.ele2} />
             </Form.Item>
           </Col>
           <Col span={5}>
             <Form.Item name="ele3" {...eleItemLayout} label="">
-              <Input disabled={eleDisabled.ele3} />
+              <Input autoComplete="off" disabled={eleDisabled.ele3} />
             </Form.Item>
           </Col>
           <Col span={5}>
             <Form.Item name="ele4" {...eleItemLayout} label="">
-              <Input disabled={eleDisabled.ele4} />
+              <Input autoComplete="off" disabled={eleDisabled.ele4} />
             </Form.Item>
           </Col>
 
