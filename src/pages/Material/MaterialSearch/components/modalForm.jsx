@@ -52,6 +52,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     <Modal
       confirmLoading={loading && loading.models.materialSearch}
       forceRender
+      centered
       width={760}
       visible={visible}
       title={props.title}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Table, Space, Button, Modal, message, Input } from 'antd';
+import { Table, Space, Button, Modal, message, Input, Row, Col } from 'antd';
 import { connect } from 'umi';
 import { EditOutlined, RedoOutlined, DeleteOutlined } from '@ant-design/icons';
 import ModalForm from './components/modalForm';
@@ -171,7 +171,7 @@ const Personnel = (props) => {
       align: 'center',
       dataIndex: '',
       fixed: 'right',
-      width: 200,
+      width: 150,
       render: (record) => (
         <Space>
           <Button
@@ -203,18 +203,22 @@ const Personnel = (props) => {
     <PageContainer
       header={{
         extra: [
-          // <Checkbox key="3">显示禁用的用户</Checkbox>,
-          <Search
-            key="1"
-            placeholder={'输入用户名或用户姓名查询'}
-            allowClear
-            enterButton
-            style={{ width: 300 }}
-            onSearch={onSearch}
-          />,
-          <Button onClick={add} key="2" type="primary">
-            新增
-          </Button>,
+          <Row key="1" gutter={[12, 8]} align="middle">
+            <Col>
+              <Search
+                placeholder={'输入用户名或用户姓名查询'}
+                allowClear
+                enterButton
+                style={{ width: 300 }}
+                onSearch={onSearch}
+              />
+            </Col>
+            <Col>
+              <Button onClick={add} type="primary">
+                新增
+              </Button>
+            </Col>
+          </Row>,
         ],
       }}
     >

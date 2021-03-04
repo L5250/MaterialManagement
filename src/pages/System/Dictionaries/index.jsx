@@ -255,7 +255,7 @@ const Dictionaries = (props) => {
       align: 'center',
       dataIndex: '',
       fixed: 'right',
-      width: 200,
+      width: 120,
       render: (record) => (
         <Space>
           <Button
@@ -308,7 +308,7 @@ const Dictionaries = (props) => {
       align: 'center',
       dataIndex: '',
       fixed: 'right',
-      width: 200,
+      width: 120,
       render: (record) => (
         <Space>
           <Button
@@ -339,18 +339,22 @@ const Dictionaries = (props) => {
     <PageContainer>
       <Layout style={{ height: '50%' }}>
         <Header style={{ marginBottom: 10 }}>
-          <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Search
-              placeholder={'输入字典分类查询'}
-              allowClear
-              enterButton
-              style={{ width: 300 }}
-              onSearch={onSearch}
-            />
-            <Button style={{ textAlign: 'right' }} onClick={addSorts} key="2" type="primary">
-              新增
-            </Button>
-          </Space>
+          <Row gutter={[12, 12]} justify="space-between">
+            <Col>
+              <Search
+                placeholder={'输入字典分类查询'}
+                allowClear
+                enterButton
+                style={{ width: 300 }}
+                onSearch={onSearch}
+              />
+            </Col>
+            <Col>
+              <Button style={{ textAlign: 'right' }} onClick={addSorts} key="2" type="primary">
+                新增
+              </Button>
+            </Col>
+          </Row>
         </Header>
         <Content>
           <Table
@@ -374,18 +378,22 @@ const Dictionaries = (props) => {
 
       <Layout style={{ marginTop: 10, height: '50%' }}>
         <Header style={{ marginBottom: 10 }}>
-          <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Search
-              placeholder={'输入字典名称查询'}
-              allowClear
-              enterButton
-              style={{ width: 300 }}
-              onSearch={onSearchItem}
-            />
-            <Button style={{ textAlign: 'right' }} onClick={addItem} key="2" type="primary">
-              新增
-            </Button>
-          </Space>
+          <Row gutter={[12, 12]} justify="space-between">
+            <Col>
+              <Search
+                placeholder={'输入字典名称查询'}
+                allowClear
+                enterButton
+                style={{ width: 300 }}
+                onSearch={onSearchItem}
+              />
+            </Col>
+            <Col>
+              <Button style={{ textAlign: 'right' }} onClick={addItem} key="2" type="primary">
+                新增
+              </Button>
+            </Col>
+          </Row>
         </Header>
         <Content>
           <Table

@@ -10,54 +10,24 @@ body,
   filter: invert(80%);
 }
 
-.ant-layout {
-  height: 100%;
-  // min-height: 100vh;
-}
-
-body .ant-layout > .ant-layout-header {
-  height: auto;
-  max-height: 100%;
-  padding: 0;
-  line-height: unset;
-  background: unset;
-}
-
-.ant-pro-basicLayout,
-.ant-pro-page-container,
-.ant-pro-basicLayout-content,
-.ant-pro-grid-content-children,
-.ant-pro-grid-content-children > div,
-.ant-pro-page-container-children-content {
-  height: 100%;
-}
-
-.ant-table-wrapper,
-.ant-spin-nested-loading,
-.ant-spin-container,
-.ant-table,
-.ant-table-container {
-  height: 100%;
-}
-
-.ant-table-body {
-  height: 100% !important;
-}
-
-.ant-pro-page-container .ant-pro-grid-content {
-  height: calc(100% - 98px);
-}
-
+// 无编辑器富文本
 .editorNoStyle {
   display: none;
 }
 
+// 选择行
 .clickRowStyl > td {
   background-color: #1890ff75;
 }
 
 .ant-table-tbody > .clickRowStyl:hover > td {
   background-color: #1890ff75 !important;
+}
+
+// 弹框适应
+.ant-modal-body {
+  max-height: 75vh;
+  overflow: auto;
 }
 
 canvas {
@@ -73,6 +43,57 @@ body {
 ul,
 ol {
   list-style: none;
+}
+
+body .ant-layout > .ant-layout-header {
+  height: auto;
+  max-height: 100%;
+  padding: 0;
+  line-height: unset;
+  background: unset;
+}
+
+.ant-pro-global-header-collapsed-button {
+  z-index: 99;
+}
+
+@media (min-width: @screen-xl) {
+  .ant-layout {
+    height: 100%;
+  }
+
+  body .ant-layout > .ant-layout-header {
+    height: auto;
+    max-height: 100%;
+    padding: 0;
+    line-height: unset;
+    background: unset;
+  }
+
+  .ant-pro-basicLayout,
+  .ant-pro-page-container,
+  .ant-pro-basicLayout-content,
+  .ant-pro-grid-content-children,
+  .ant-pro-grid-content-children > div,
+  .ant-pro-page-container-children-content {
+    height: 100%;
+  }
+
+  .ant-table-wrapper,
+  .ant-spin-nested-loading,
+  .ant-spin-container,
+  .ant-table,
+  .ant-table-container {
+    height: 100%;
+  }
+
+  .ant-table-body {
+    height: 100% !important;
+  }
+
+  .ant-pro-page-container .ant-pro-grid-content {
+    height: calc(100% - 98px);
+  }
 }
 
 @media (max-width: @screen-xs) {

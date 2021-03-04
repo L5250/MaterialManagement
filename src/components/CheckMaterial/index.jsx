@@ -32,6 +32,13 @@ const CheckMaterial = (props) => {
 
   // 文献弹框表格
   const literColumns = [
+    {
+      dataIndex: '',
+      title: '序号',
+      align: 'center',
+      width: 80,
+      render: (text, record, index) => index + 1,
+    },
     { dataIndex: 'LiterName', title: '文献名称', align: 'center' },
     { dataIndex: 'LiterYear', title: '文献年份', align: 'center', width: 120 },
     { dataIndex: 'LiterCode', title: '文献DOI号', align: 'center', width: 150 },
@@ -41,6 +48,7 @@ const CheckMaterial = (props) => {
   return (
     <Modal
       visible={visible}
+      centered
       forceRender
       width={760}
       title={'查看材料'}
@@ -57,7 +65,7 @@ const CheckMaterial = (props) => {
           </div>
         }
         bordered
-        column={2}
+        column={{ xl: 2, lg: 1, xs: 1 }}
         labelStyle={{ width: 120, textAlign: 'right' }}
         extra={
           <Space direction="vertical">
@@ -81,7 +89,7 @@ const CheckMaterial = (props) => {
         <Descriptions.Item label="密度">{dataObj.Density}</Descriptions.Item>
         <Descriptions.Item label="沸点">{dataObj.BoilingPoint}℃</Descriptions.Item>
         <Descriptions.Item label="分子式">
-          {formatFormula(dataObj.ChemicalFormula)}
+          <span>{formatFormula(dataObj.ChemicalFormula)}</span>
         </Descriptions.Item>
         <Descriptions.Item label="熔点">{dataObj.MeltingPoint}℃</Descriptions.Item>
         <Descriptions.Item label="MSDN">
@@ -101,7 +109,6 @@ const CheckMaterial = (props) => {
         visible={literVisible}
         centered
         width={1200}
-        height={500}
         title={'相关文献'}
         onCancel={() => setLiterVisible(false)}
         footer={null}

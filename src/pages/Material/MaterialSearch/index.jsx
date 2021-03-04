@@ -88,6 +88,15 @@ const MaterialSearch = (props) => {
   // 表格列
   const columns = [
     {
+      title: '序号',
+      align: 'center',
+      dataIndex: '',
+      width: 80,
+      render: (text, record, index) => {
+        return index + 1;
+      },
+    },
+    {
       title: 'CAS号',
       align: 'center',
       dataIndex: 'MaterialRecordCode',
@@ -106,7 +115,7 @@ const MaterialSearch = (props) => {
       title: '分子式',
       align: 'center',
       dataIndex: 'ChemicalFormula',
-      render: (text) => formatFormula(text),
+      render: (text) => <span>{formatFormula(text)}</span>,
     },
     {
       title: '分子量',
@@ -122,19 +131,19 @@ const MaterialSearch = (props) => {
       title: '沸点',
       align: 'center',
       dataIndex: 'BoilingPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '熔点',
       align: 'center',
       dataIndex: 'MeltingPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '闪点',
       align: 'center',
       dataIndex: 'FlashPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '操作',

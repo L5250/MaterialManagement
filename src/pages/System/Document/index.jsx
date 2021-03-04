@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Table, Space, Layout, Button, Modal, Input, message } from 'antd';
+import { Table, Space, Layout, Button, Modal, Input, message, Row, Col } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -136,7 +136,7 @@ const DocumentManagement = (props) => {
       title: '操作',
       dataIndex: '',
       align: 'center',
-      width: 200,
+      width: 120,
       fixed: 'right',
       render: (record) => (
         <Space>
@@ -162,17 +162,22 @@ const DocumentManagement = (props) => {
     <PageContainer
       header={{
         extra: [
-          <Search
-            key="1"
-            placeholder={'输入文献名称查询'}
-            allowClear
-            enterButton
-            style={{ width: 300 }}
-            onSearch={onSearch}
-          />,
-          <Button onClick={add} key="2" type="primary">
-            新增
-          </Button>,
+          <Row key="1" gutter={[12, 8]} align="middle">
+            <Col>
+              <Search
+                placeholder={'输入文献名称查询'}
+                allowClear
+                enterButton
+                style={{ width: 300 }}
+                onSearch={onSearch}
+              />
+            </Col>
+            <Col>
+              <Button onClick={add} type="primary">
+                新增
+              </Button>
+            </Col>
+          </Row>,
         ],
       }}
     >

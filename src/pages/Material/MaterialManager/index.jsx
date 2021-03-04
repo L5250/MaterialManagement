@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Table, Space, Button, Modal, Input, Checkbox } from 'antd';
+import { Table, Space, Button, Modal, Input, Checkbox, Row, Col } from 'antd';
 import { connect } from 'umi';
 import ModalForm from './components/modalForm';
 import CheckMaterial from '@/components/CheckMaterial';
@@ -146,6 +146,13 @@ const MaterialManager = (props) => {
   // 表格列
   const columns = [
     {
+      dataIndex: '',
+      title: '序号',
+      align: 'center',
+      width: 80,
+      render: (text, record, index) => index + 1,
+    },
+    {
       title: 'CAS号',
       align: 'center',
       dataIndex: 'MaterialRecordCode',
@@ -162,9 +169,10 @@ const MaterialManager = (props) => {
     },
     {
       title: '分子式',
+      width: 120,
       align: 'center',
       dataIndex: 'ChemicalFormula',
-      render: (text) => formatFormula(text),
+      render: (text) => <span>{formatFormula(text)}</span>,
     },
     {
       title: '分子量',
@@ -180,26 +188,26 @@ const MaterialManager = (props) => {
       title: '沸点',
       align: 'center',
       dataIndex: 'BoilingPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '熔点',
       align: 'center',
       dataIndex: 'MeltingPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '闪点',
       align: 'center',
       dataIndex: 'FlashPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '操作',
       align: 'center',
       dataIndex: '',
       fixed: 'right',
-      width: 200,
+      width: 150,
       render: (record) => (
         <Space>
           <Button
@@ -242,20 +250,28 @@ const MaterialManager = (props) => {
     <PageContainer
       header={{
         extra: [
-          <Checkbox key="1" onChange={invalidChange}>
-            显示禁用的材料
-          </Checkbox>,
-          <Search
-            key="2"
-            placeholder={'输入材料名称或DAS号查询'}
-            allowClear
-            enterButton
-            style={{ width: 300 }}
-            onSearch={onSearch}
-          />,
-          <Button onClick={add} key="3" type="primary">
-            新增
-          </Button>,
+          <Row key="1" gutter={[12, 8]} align="middle">
+            <Col>
+              <Checkbox key="1" onChange={invalidChange}>
+                显示禁用的材料
+              </Checkbox>
+            </Col>
+            <Col>
+              <Search
+                key="2"
+                placeholder={'输入材料名称或DAS号查询'}
+                allowClear
+                enterButton
+                style={{ width: 300 }}
+                onSearch={onSearch}
+              />
+            </Col>
+            <Col>
+              <Button onClick={add} key="3" type="primary">
+                新增
+              </Button>
+            </Col>
+          </Row>,
         ],
       }}
     >

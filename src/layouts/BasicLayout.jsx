@@ -145,7 +145,7 @@ const BasicLayout = (props) => {
       }}
       headerContentRender={() => {
         return (
-          <img src={logoPng} style={{ height: 100, position: 'absolute', top: -20, left: -20 }} />
+          <img src={logoPng} style={{ height: 100, position: 'relative', top: -20, left: -20 }} />
         );
       }}
     >

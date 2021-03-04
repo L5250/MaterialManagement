@@ -6,13 +6,14 @@ const HomeWordCloud = (props) => {
   const { literCount } = props;
 
   const config = {
+    autoFit: true,
     data: literCount,
     wordField: 'name',
     weightField: 'count',
     colorField: 'name',
     wordStyle: {
       fontFamily: 'Verdana',
-      fontSize: [8, 32],
+      fontSize: [16, 50],
       rotation: 0,
     },
     random: function random() {

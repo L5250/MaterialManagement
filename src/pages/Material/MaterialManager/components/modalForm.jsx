@@ -26,9 +26,9 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-async function getBase64(img, callback) {
+function getBase64(img, callback) {
   const reader = new FileReader();
-  await reader.addEventListener('load', () => callback(reader.result));
+  reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 }
 
@@ -58,21 +58,18 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   }
 
   const handleChange = (info) => {
-    // if (info.file.status === 'uploading') {
-    //   return;
-    // }
-    // if (info.file.status === 'done') {
-    getBase64(info.file.originFileObj, (imageUrl) => {
-      dispatch({
-        type: 'materialManager/setState',
-        params: {
-          imageUrl64: imageUrl,
-        },
+    if (info?.file?.originFileObj) {
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        dispatch({
+          type: 'materialManager/setState',
+          params: {
+            imageUrl64: imageUrl,
+          },
+        });
+        form.setFieldsValue({ Symbol: imageUrl });
       });
-      form.setFieldsValue({ Symbol: imageUrl });
-    });
-    form.setFieldsValue({ Symbol: imageUrl64 });
-    // }
+      form.setFieldsValue({ Symbol: imageUrl64 });
+    }
   };
 
   // 打开文献弹框
@@ -104,6 +101,13 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   };
   // 文献弹框表格
   const literColumns = [
+    {
+      dataIndex: '',
+      title: '序号',
+      align: 'center',
+      width: 80,
+      render: (text, record, index) => index + 1,
+    },
     { dataIndex: 'LiterName', title: '文献名称', align: 'center' },
     { dataIndex: 'LiterYear', title: '文献年份', align: 'center', width: 120 },
     { dataIndex: 'LiterCode', title: '文献DOI号', align: 'center', width: 150 },
@@ -144,6 +148,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
     <Modal
       confirmLoading={loading && loading.models.materialManager}
       forceRender
+      centered
       width={760}
       visible={visible}
       title={props.title}
@@ -364,7 +369,6 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
         visible={literVisible}
         centered
         width={1200}
-        height={500}
         okText="确定"
         cancelText="取消"
         title={'相关文献'}

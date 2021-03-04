@@ -45,6 +45,7 @@ const ModalForm = ({ visible, onCreate, onCancel, cRef, ...props }) => {
   return (
     <Modal
       confirmLoading={loading && loading.global}
+      centered
       forceRender
       width={460}
       visible={visible}

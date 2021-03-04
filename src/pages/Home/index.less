@@ -1,19 +1,23 @@
-.home {
-  .home_col {
-    height: 100%;
-  }
+@import '~antd/es/style/themes/default.less';
 
-  :global {
-    .ant-col-12 {
-      height: 100%;
+@media (min-width: @screen-xl) {
+  .home {
+    .home_col {
+      height: calc(50% - 8px);
     }
 
-    .ant-card {
-      height: 100%;
-    }
+    :global {
+      .ant-col-12 {
+        height: 100%;
+      }
 
-    .ant-card-body {
-      height: calc(100% - 58px);
+      .ant-card {
+        height: 100%;
+      }
+
+      .ant-card-body {
+        height: calc(100% - 58px);
+      }
     }
   }
 }

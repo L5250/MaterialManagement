@@ -5,9 +5,10 @@ import { connect } from 'umi';
 import CheckMaterial from '@/components/CheckMaterial';
 import { EyeOutlined } from '@ant-design/icons';
 import formatFormula from '@/utils/formatFormula';
-import HomeCharts from './components/HomeCharts';
-import HomePie from './components/HomePie';
 import HomeWordCloud from './components/HomeWordCloud';
+import HomeCharts from './components/HomeCharts';
+import HomeColumns from './components/HomeColumns';
+import HomePie from './components/HomePie';
 import styles from './index.less';
 
 const { Content } = Layout;
@@ -39,6 +40,11 @@ const Home = (props) => {
       type: 'home/getAppliSceneDist',
     });
   };
+  const getTypeMaterialCount = () => {
+    dispatch({
+      type: 'home/getTypeMaterialCount',
+    });
+  };
   // 查看
   const check = (record) => {
     dispatch({
@@ -55,6 +61,7 @@ const Home = (props) => {
     getLiterToMaterialCount();
     getLiterPerYearCount();
     getAppliSceneDist();
+    getTypeMaterialCount();
   }, []);
   // 表格列
   const columns = [
@@ -64,7 +71,7 @@ const Home = (props) => {
       dataIndex: 'MaterialRecordCode',
       render: (text, record) => (
         <Space>
-          <Button type="link" onClick={() => check(record)} title="CAS号">
+          <Button type="link" onClick={() => check(record)} title={text}>
             {text}
           </Button>
         </Space>
@@ -84,7 +91,7 @@ const Home = (props) => {
       title: '分子式',
       align: 'center',
       dataIndex: 'ChemicalFormula',
-      render: (text) => formatFormula(text),
+      render: (text) => <span>{formatFormula(text)}</span>,
     },
     {
       title: '分子量',
@@ -100,19 +107,19 @@ const Home = (props) => {
       title: '沸点',
       align: 'center',
       dataIndex: 'BoilingPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '熔点',
       align: 'center',
       dataIndex: 'MeltingPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     {
       title: '闪点',
       align: 'center',
       dataIndex: 'FlashPoint',
-      render: (text) => `${text}℃`,
+      render: (text) => text && `${text}℃`,
     },
     // {
     //   title: '操作',
@@ -135,8 +142,8 @@ const Home = (props) => {
   return (
     <Layout className={styles.home}>
       <Content>
-        <Row gutter={24} style={{ height: '50%', marginBottom: 12 }}>
-          <Col span={18} className={styles.home_col}>
+        <Row gutter={[24, 16]} style={{ height: '100%' }}>
+          <Col span={24} xl={18} className={styles.home_col}>
             <Card title="最近材料" bordered={false} hoverable>
               <Table
                 loading={loading && loading.models.materialManager}
@@ -148,20 +155,24 @@ const Home = (props) => {
               />
             </Card>
           </Col>
-          <Col span={6} className={styles.home_col}>
+          <Col span={24} xl={6} className={styles.home_col}>
             <Card title="引用文献次数" bordered={false} hoverable>
               <HomeWordCloud />
             </Card>
           </Col>
-        </Row>
 
-        <Row gutter={24} style={{ height: '50%' }}>
-          <Col span={14} className={styles.home_col}>
+          <Col span={24} xl={9} className={styles.home_col}>
             <Card title="文献年份计数统计" bordered={false} hoverable>
               <HomeCharts />
             </Card>
           </Col>
-          <Col span={10} className={styles.home_col}>
+          <Col span={24} xl={9} className={styles.home_col}>
+            <Card title="自愈类型材料计数" bordered={false} hoverable>
+              <HomeColumns />
+            </Card>
+          </Col>
+
+          <Col span={24} xl={6} className={styles.home_col}>
             <Card title="应用场景占比" bordered={false} hoverable>
               <HomePie />
             </Card>

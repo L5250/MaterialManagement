@@ -16,5 +16,15 @@ async function getLiterPerYearCount(params) {
 async function getAppliSceneDist(params) {
   return request(`/api/ActionApi/MaterialManage/GetAppliSceneDist`, { params });
 }
+// 获取自愈类型材料计数
+async function getTypeMaterialCount(params) {
+  return request(`/api/ActionApi/MaterialManage/GetTypeMaterialCount`, { params });
+}
 
-export default { getDataTop5, getLiterToMaterialCount, getLiterPerYearCount, getAppliSceneDist };
+export default {
+  getDataTop5,
+  getLiterToMaterialCount,
+  getLiterPerYearCount,
+  getAppliSceneDist,
+  getTypeMaterialCount,
+};
