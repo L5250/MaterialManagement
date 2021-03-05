@@ -36,12 +36,14 @@ const MaterialManager = (props) => {
 
   const onCreate = (values) => {
     const formData = {
+      ...rowData,
       ...values,
       Symbol: imageUrl64,
       MaterialRecordID: rowData.MaterialRecordID || '',
       ApplicationScene: values.ApplicationScene?.toString(),
       MaterialType: values.MaterialType?.toString(),
     };
+    console.log(formData);
     dispatch({
       type: 'materialManager/saveMaterialRecord',
       params: {
