@@ -43,7 +43,6 @@ const MaterialManager = (props) => {
       ApplicationScene: values.ApplicationScene?.toString(),
       MaterialType: values.MaterialType?.toString(),
     };
-    console.log(formData);
     dispatch({
       type: 'materialManager/saveMaterialRecord',
       params: {
