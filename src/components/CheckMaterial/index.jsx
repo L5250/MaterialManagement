@@ -65,7 +65,7 @@ const CheckMaterial = (props) => {
           </div>
         }
         bordered
-        column={{ xl: 2, lg: 1, xs: 1 }}
+        column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}
         labelStyle={{ width: 120, textAlign: 'right' }}
         extra={
           <Space direction="vertical">

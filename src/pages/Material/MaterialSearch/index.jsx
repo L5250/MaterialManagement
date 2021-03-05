@@ -39,6 +39,7 @@ const MaterialSearch = (props) => {
       ...values,
       // Symbol: imageUrl64,
       // MaterialRecordID: rowData.MaterialRecordID || '',
+      ele1: values.ele1 || undefined,
       ele2: values.ele2 || values.ele1 || undefined,
       ele3: values.ele3 || values.ele1 || undefined,
       ele4: values.ele4 || values.ele1 || undefined,
