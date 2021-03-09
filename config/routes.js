@@ -24,7 +24,6 @@ export default [
           {
             path: '/',
             component: '../layouts/BasicLayout',
-            authority: ['admin', 'user'],
             routes: [
               {
                 path: '/',
@@ -36,8 +35,6 @@ export default [
                 icon: 'home',
                 component: './Home',
               },
-
-              //
               {
                 name: '材料管理',
                 path: '/Materia',
@@ -62,6 +59,7 @@ export default [
                 name: '系统管理',
                 icon: 'SettingOutlined',
                 path: '/System',
+                authority: ['admin'],
                 routes: [
                   {
                     name: '文献管理',
@@ -72,7 +70,6 @@ export default [
                     name: '人员管理',
                     path: '/System/Personnel',
                     component: './System/Personnel',
-                    authority: ['admin', 'user'],
                   },
                   {
                     name: '字典设置',

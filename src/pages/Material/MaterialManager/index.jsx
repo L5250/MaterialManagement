@@ -237,15 +237,6 @@ const MaterialManager = (props) => {
               />
             </Space>
           ) : null}
-          {/* <a onClick={() => check(record)}>查看</a>
-          {
-            userInfo.IsAdmin ?
-              <Space>
-                <a onClick={() => edit(record)}>编辑</a>
-                <a onClick={() => deleteItem(record)}>删除</a>
-              </Space>
-              : null
-          } */}
         </Space>
       ),
     },
@@ -270,11 +261,13 @@ const MaterialManager = (props) => {
                 onSearch={onSearch}
               />
             </Col>
-            <Col>
-              <Button onClick={add} key="3" type="primary">
-                新增
-              </Button>
-            </Col>
+            {userInfo.IsAdmin ? (
+              <Col>
+                <Button onClick={add} key="3" type="primary">
+                  新增
+                </Button>
+              </Col>
+            ) : null}
           </Row>,
         ],
       }}
